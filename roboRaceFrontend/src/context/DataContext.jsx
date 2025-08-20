@@ -373,6 +373,33 @@ export const DataProvider = ({ children }) => {
     return currentRankings.slice(0, Math.min(targetCount, currentRankings.length));
   };
 
+
+
+  // Função para distribuir equipes automaticamente em grupos
+  const distributeTeamsToGroups = () => {
+    if (data.groups.length === 0 || data.teams.length === 0) return 0;
+    
+    // Embaralhar equipes para distribuição aleatória
+    const shuffledTeams = [...data.teams].sort(() => Math.random() - 0.5);
+    const availableGroups = [...data.groups];
+    
+    // Limpar grupos existentes
+    const clearedGroups = availableGroups.map(group => ({ ...group, teams: [] }));
+    
+    // Distribuir equipes igualmente entre os grupos
+    shuffledTeams.forEach((team, index) => {
+      const groupIndex = index % clearedGroups.length;
+      clearedGroups[groupIndex].teams.push(team);
+    });
+    
+    setData(prev => ({
+      ...prev,
+      groups: clearedGroups
+    }));
+    
+    return shuffledTeams.length;
+  };
+
   // Função para gerar partidas eliminatórias
   const generateEliminationMatches = (phase, teams) => {
     const matches = [];
@@ -469,7 +496,10 @@ export const DataProvider = ({ children }) => {
     phases: data.phases,
     advanceToNextPhase,
     isCurrentPhaseComplete,
-    getQualifiedTeams
+    getQualifiedTeams,
+    
+    // Distribuição Automática
+    distributeTeamsToGroups
   };
 
   return (

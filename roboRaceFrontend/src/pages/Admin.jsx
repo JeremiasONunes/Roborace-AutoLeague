@@ -18,7 +18,8 @@ export default function Admin() {
     advanceToNextPhase,
     isCurrentPhaseComplete,
     importData,
-    exportData
+    exportData,
+    distributeTeamsToGroups
   } = useData();
   const [showConfirm, setShowConfirm] = useState(false);
   const navigate = useNavigate();
@@ -151,10 +152,28 @@ export default function Admin() {
               Chaves por Grupos
             </button>
           )}
+
+          {groups.length > 0 && teams.length > 0 && (
+            <button
+              onClick={() => {
+                if (confirm(`Distribuir ${teams.length} equipes igualmente entre ${groups.length} grupos?`)) {
+                  const distributed = distributeTeamsToGroups();
+                  alert(`${distributed} equipes distribuídas!`);
+                  navigate('/groups');
+                }
+              }}
+              className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 flex items-center gap-2"
+            >
+              <Shuffle className="w-4 h-4" />
+              Distribuir Equipes
+            </button>
+          )}
         </div>
         <p className="text-sm text-gray-500 mb-6">
-          Gere partidas automaticamente com base nas equipes cadastradas ou nos grupos criados.
+          Gere partidas automaticamente ou distribua equipes em grupos de forma equilibrada.
         </p>
+        
+
       </div>
 
       <div className="bg-white rounded-lg shadow p-6">

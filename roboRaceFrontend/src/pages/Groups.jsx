@@ -1,11 +1,11 @@
 import { useState } from 'react';
-import { Plus, Users, Trash2, Zap } from 'lucide-react';
+import { Plus, Users, Trash2, Zap, Shuffle } from 'lucide-react';
 import { useData } from '../context/DataContext';
 import ConfirmModal from '../components/ConfirmModal';
 import { useNavigate } from 'react-router-dom';
 
 export default function Groups() {
-  const { teams, groups, addGroup, removeGroup, addTeamToGroup, removeTeamFromGroup, generateGroupBrackets } = useData();
+  const { teams, groups, addGroup, removeGroup, addTeamToGroup, removeTeamFromGroup, generateGroupBrackets, distributeTeamsToGroups } = useData();
   const [newGroupName, setNewGroupName] = useState('');
   const [confirmModal, setConfirmModal] = useState({ isOpen: false, action: null, data: null });
   const navigate = useNavigate();
@@ -72,6 +72,28 @@ export default function Groups() {
           </button>
         </div>
       </div>
+
+      {/* Distribuição Automática */}
+      {groups.length > 0 && teams.length > 0 && (
+        <div className="bg-white rounded-lg shadow p-6">
+          <h2 className="text-lg font-semibold mb-4">Distribuição Automática</h2>
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => {
+                const distributed = distributeTeamsToGroups();
+                alert(`${distributed} equipes distribuídas igualmente entre ${groups.length} grupos!`);
+              }}
+              className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 flex items-center gap-2"
+            >
+              <Shuffle className="w-4 h-4" />
+              Distribuir Igualmente
+            </button>
+          </div>
+          <p className="text-sm text-gray-500 mt-2">
+            Distribui {teams.length} equipes igualmente entre {groups.length} grupos (≈{Math.ceil(teams.length / groups.length)} equipes por grupo)
+          </p>
+        </div>
+      )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {groups.map((group) => (
