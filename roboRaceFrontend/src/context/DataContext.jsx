@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect, useMemo } from 'react';
 
 const DataContext = createContext();
 
@@ -47,10 +47,15 @@ export const DataProvider = ({ children }) => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
   }, [data]);
 
+  // Geração de ID único
+  const generateId = () => {
+    return crypto.randomUUID ? crypto.randomUUID() : Date.now() + Math.random();
+  };
+
   // Funções para Teams
   const addTeam = (team) => {
     const newTeam = {
-      id: Date.now(),
+      id: generateId(),
       name: team.name.trim(),
       createdAt: new Date().toISOString()
     };
@@ -78,7 +83,7 @@ export const DataProvider = ({ children }) => {
   // Funções para Groups
   const addGroup = (group) => {
     const newGroup = {
-      id: Date.now(),
+      id: generateId(),
       name: group.name.trim(),
       teams: [],
       createdAt: new Date().toISOString()
@@ -127,7 +132,7 @@ export const DataProvider = ({ children }) => {
   // Funções para Matches
   const addMatch = (match) => {
     const newMatch = {
-      id: Date.now(),
+      id: generateId(),
       team1: match.team1,
       team2: match.team2,
       status: 'pending',
@@ -209,8 +214,8 @@ export const DataProvider = ({ children }) => {
     });
   };
 
-  // Função para calcular rankings baseado nos resultados das partidas
-  const calculateRankings = (currentData) => {
+  // Função para calcular rankings baseado nos resultados das partidas (memoizada)
+  const calculateRankings = useMemo(() => (currentData) => {
     const teamStats = {};
     
     // Inicializar stats para todas as equipes
@@ -268,7 +273,7 @@ export const DataProvider = ({ children }) => {
         ...stats,
         position: index + 1
       }));
-  };
+  }, []);
 
   // Função para gerar chaves aleatórias
   const generateRandomBrackets = () => {
@@ -280,7 +285,7 @@ export const DataProvider = ({ children }) => {
     for (let i = 0; i < shuffledTeams.length - 1; i += 2) {
       if (shuffledTeams[i + 1]) {
         newMatches.push({
-          id: Date.now() + i,
+          id: generateId(),
           team1: shuffledTeams[i],
           team2: shuffledTeams[i + 1],
           status: 'pending',
@@ -302,7 +307,6 @@ export const DataProvider = ({ children }) => {
   // Função para gerar chaves por grupo
   const generateGroupBrackets = () => {
     const newMatches = [];
-    let matchId = Date.now();
     
     data.groups.forEach(group => {
       if (group.teams.length >= 2) {
@@ -310,7 +314,7 @@ export const DataProvider = ({ children }) => {
         for (let i = 0; i < group.teams.length; i++) {
           for (let j = i + 1; j < group.teams.length; j++) {
             newMatches.push({
-              id: matchId++,
+              id: generateId(),
               team1: group.teams[i],
               team2: group.teams[j],
               status: 'pending',

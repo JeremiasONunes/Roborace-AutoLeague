@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { Plus, Users, Trash2, Zap } from 'lucide-react';
 import { useData } from '../context/DataContext';
+import ConfirmModal from '../components/ConfirmModal';
 
 export default function Groups() {
   const { teams, groups, addGroup, removeGroup, addTeamToGroup, removeTeamFromGroup, generateGroupBrackets } = useData();
   const [newGroupName, setNewGroupName] = useState('');
+  const [confirmModal, setConfirmModal] = useState({ isOpen: false, action: null, data: null });
 
   const handleCreateGroup = () => {
     if (newGroupName.trim()) {
@@ -33,11 +35,12 @@ export default function Groups() {
           <span className="text-sm text-gray-500">{groups.length} grupos criados</span>
           {groups.length > 0 && groups.some(g => g.teams.length >= 2) && (
             <button
-              onClick={() => {
-                if (confirm('Gerar partidas para todos os grupos? Isso criará jogos entre todas as equipes de cada grupo.')) {
-                  generateGroupBrackets();
-                }
-              }}
+              onClick={() => setConfirmModal({
+                isOpen: true,
+                action: 'generate',
+                title: 'Gerar Partidas',
+                message: 'Gerar partidas para todos os grupos? Isso criará jogos entre todas as equipes de cada grupo.'
+              })}
               className="px-4 py-2 bg-[#41A650] text-white rounded-md hover:bg-[#2DA63F] flex items-center gap-2"
             >
               <Zap className="w-4 h-4" />
@@ -133,6 +136,20 @@ export default function Groups() {
           <p className="text-gray-500">Crie grupos para organizar as equipes ou deixe vazio para gerar chaves automáticas</p>
         </div>
       )}
+
+      <ConfirmModal
+        isOpen={confirmModal.isOpen}
+        onClose={() => setConfirmModal({ isOpen: false, action: null, data: null })}
+        onConfirm={() => {
+          if (confirmModal.action === 'generate') {
+            generateGroupBrackets();
+          }
+        }}
+        title={confirmModal.title}
+        message={confirmModal.message}
+        confirmText="Gerar"
+        type="info"
+      />
     </div>
   );
 }

@@ -1,13 +1,22 @@
 import { Trophy, Calendar, Users, Clock, Eye, Zap, ChevronRight, CheckCircle, Play } from 'lucide-react';
 import { useRealTimeData } from '../hooks/useRealTimeData';
+import { useMemo } from 'react';
 
 export default function PublicView() {
   const data = useRealTimeData();
   const { teams, matches, rankings, currentPhase, phases } = data;
 
-  const pendingMatches = matches.filter(m => m.status === 'pending').slice(0, 4);
-  const completedMatches = matches.filter(m => m.status === 'completed');
-  const topTeams = rankings.slice(0, 5);
+  const { pendingMatches, completedMatches, topTeams } = useMemo(() => {
+    const pending = matches.filter(m => m.status === 'pending').slice(0, 4);
+    const completed = matches.filter(m => m.status === 'completed');
+    const top = rankings.slice(0, 5);
+    
+    return {
+      pendingMatches: pending,
+      completedMatches: completed,
+      topTeams: top
+    };
+  }, [matches, rankings]);
 
   return (
     <div className="min-h-screen bg-[#A7D9AE]">

@@ -17,8 +17,10 @@ export default function Login({ onLogin }) {
     setError('');
     setLoading(true);
 
-    // Simulação de login - substituir por API real
-    if (credentials.username === 'admin' && credentials.password === 'admin123') {
+    const validUsername = import.meta.env.VITE_ADMIN_USERNAME || 'admin';
+    const validPassword = import.meta.env.VITE_ADMIN_PASSWORD || 'admin123';
+    
+    if (credentials.username === validUsername && credentials.password === validPassword) {
       onLogin(true);
       navigate('/teams');
     } else {

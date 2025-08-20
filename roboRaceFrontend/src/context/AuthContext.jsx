@@ -17,25 +17,38 @@ export const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Verificar se há token salvo no localStorage
-    const token = localStorage.getItem('roborace_token');
-    if (token) {
-      setIsAuthenticated(true);
+    try {
+      const token = localStorage.getItem('roborace_token');
+      if (token) {
+        setIsAuthenticated(true);
+      }
+    } catch (error) {
+      console.error('Erro ao acessar localStorage:', error);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   }, []);
 
   const login = (success) => {
     if (success) {
-      localStorage.setItem('roborace_token', 'admin_token');
-      setIsAuthenticated(true);
+      try {
+        localStorage.setItem('roborace_token', 'admin_token');
+        setIsAuthenticated(true);
+      } catch (error) {
+        console.error('Erro ao salvar token:', error);
+      }
     }
   };
 
   const logout = () => {
-    localStorage.removeItem('roborace_token');
-    setIsAuthenticated(false);
-    navigate('/login');
+    try {
+      localStorage.removeItem('roborace_token');
+    } catch (error) {
+      console.error('Erro ao remover token:', error);
+    } finally {
+      setIsAuthenticated(false);
+      navigate('/login');
+    }
   };
 
   const value = {

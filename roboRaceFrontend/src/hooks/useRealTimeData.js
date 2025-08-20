@@ -19,19 +19,19 @@ export const useRealTimeData = () => {
   });
 
   const loadData = () => {
-    const savedData = localStorage.getItem(STORAGE_KEY);
-    if (savedData) {
-      try {
+    try {
+      const savedData = localStorage.getItem(STORAGE_KEY);
+      if (savedData) {
         setData(JSON.parse(savedData));
-      } catch (error) {
-        console.error('Erro ao carregar dados:', error);
       }
+    } catch (error) {
+      console.error('Erro ao carregar dados do localStorage:', error);
     }
   };
 
   useEffect(() => {
     loadData();
-    const interval = setInterval(loadData, 1000);
+    const interval = setInterval(loadData, 5000);
     
     const handleStorageChange = (e) => {
       if (e.key === STORAGE_KEY) {

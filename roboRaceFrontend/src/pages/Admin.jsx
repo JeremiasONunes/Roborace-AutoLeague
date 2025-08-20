@@ -3,7 +3,20 @@ import { useData } from '../context/DataContext';
 import { useState } from 'react';
 
 export default function Admin() {
-  const { teams, groups, matches, rankings, clearAllData, generateRandomBrackets, generateGroupBrackets, currentPhase, phases, advanceToNextPhase, isCurrentPhaseComplete, importData } = useData();
+  const {
+    teams,
+    groups, 
+    matches,
+    rankings,
+    currentPhase,
+    phases,
+    clearAllData,
+    generateRandomBrackets,
+    generateGroupBrackets,
+    advanceToNextPhase,
+    isCurrentPhaseComplete,
+    importData
+  } = useData();
   const [showConfirm, setShowConfirm] = useState(false);
 
   const handleClearData = () => {
