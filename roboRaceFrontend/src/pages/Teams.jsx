@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { Plus, Trash2, Shuffle, Users } from 'lucide-react';
 import { useData } from '../context/DataContext';
+import { useNavigate } from 'react-router-dom';
 
 export default function Teams() {
   const { teams, addTeam, removeTeam, generateRandomBrackets } = useData();
   const [newTeamName, setNewTeamName] = useState('');
+  const navigate = useNavigate();
 
   const handleAddTeam = () => {
     if (newTeamName.trim()) {
@@ -29,6 +31,7 @@ export default function Teams() {
             onClick={() => {
               if (confirm('Gerar chaves aleatórias com todas as equipes? Isso criará partidas de forma aleatória.')) {
                 generateRandomBrackets();
+                navigate('/matches');
               }
             }}
             className="px-4 py-2.5 bg-[#2DA63F] text-white rounded-xl hover:bg-[#41A650] flex items-center gap-2 transition-all duration-200 text-sm font-medium shadow-sm"

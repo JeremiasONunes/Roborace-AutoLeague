@@ -2,11 +2,13 @@ import { useState } from 'react';
 import { Plus, Users, Trash2, Zap } from 'lucide-react';
 import { useData } from '../context/DataContext';
 import ConfirmModal from '../components/ConfirmModal';
+import { useNavigate } from 'react-router-dom';
 
 export default function Groups() {
   const { teams, groups, addGroup, removeGroup, addTeamToGroup, removeTeamFromGroup, generateGroupBrackets } = useData();
   const [newGroupName, setNewGroupName] = useState('');
   const [confirmModal, setConfirmModal] = useState({ isOpen: false, action: null, data: null });
+  const navigate = useNavigate();
 
   const handleCreateGroup = () => {
     if (newGroupName.trim()) {
@@ -143,6 +145,7 @@ export default function Groups() {
         onConfirm={() => {
           if (confirmModal.action === 'generate') {
             generateGroupBrackets();
+            navigate('/matches');
           }
         }}
         title={confirmModal.title}

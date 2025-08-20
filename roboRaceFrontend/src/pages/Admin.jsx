@@ -1,6 +1,7 @@
 import { Trash2, Download, Upload, AlertTriangle, Shuffle, Zap } from 'lucide-react';
 import { useData } from '../context/DataContext';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export default function Admin() {
   const {
@@ -18,6 +19,7 @@ export default function Admin() {
     importData
   } = useData();
   const [showConfirm, setShowConfirm] = useState(false);
+  const navigate = useNavigate();
 
   const handleClearData = () => {
     clearAllData();
@@ -125,6 +127,7 @@ export default function Admin() {
               onClick={() => {
                 if (confirm('Gerar chaves aleatórias com todas as equipes?')) {
                   generateRandomBrackets();
+                  navigate('/matches');
                 }
               }}
               className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 flex items-center gap-2"
@@ -138,6 +141,7 @@ export default function Admin() {
               onClick={() => {
                 if (confirm('Gerar partidas para todos os grupos?')) {
                   generateGroupBrackets();
+                  navigate('/matches');
                 }
               }}
               className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 flex items-center gap-2"
