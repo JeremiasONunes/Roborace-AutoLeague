@@ -29,17 +29,19 @@ export default function Matches() {
 
   const handleAddMatch = () => {
     if (newMatch.team1Id && newMatch.team2Id && newMatch.team1Id !== newMatch.team2Id) {
-      const team1 = teams.find(t => t.id === parseInt(newMatch.team1Id));
-      const team2 = teams.find(t => t.id === parseInt(newMatch.team2Id));
+      const team1 = teams.find(t => t.id == newMatch.team1Id);
+      const team2 = teams.find(t => t.id == newMatch.team2Id);
       
-      addMatch({
-        team1,
-        team2,
-        phase: newMatch.phase
-      });
-      
-      setNewMatch({ team1Id: '', team2Id: '', phase: 'Fase de Grupos' });
-      setShowAddMatch(false);
+      if (team1 && team2) {
+        addMatch({
+          team1,
+          team2,
+          phase: newMatch.phase
+        });
+        
+        setNewMatch({ team1Id: '', team2Id: '', phase: 'Fase de Grupos' });
+        setShowAddMatch(false);
+      }
     }
   };
 
@@ -100,7 +102,7 @@ export default function Matches() {
               className="px-3 py-2 border border-gray-300 rounded-md"
             >
               <option value="">Selecione Equipe 2</option>
-              {teams.filter(team => team.id !== parseInt(newMatch.team1Id)).map(team => (
+              {teams.filter(team => team.id != newMatch.team1Id).map(team => (
                 <option key={team.id} value={team.id}>{team.name}</option>
               ))}
             </select>
