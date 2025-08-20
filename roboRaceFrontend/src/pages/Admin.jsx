@@ -2,6 +2,7 @@ import { Trash2, Download, Upload, AlertTriangle, Shuffle, Zap } from 'lucide-re
 import { useData } from '../context/DataContext';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import StorageInfo from '../components/StorageInfo';
 
 export default function Admin() {
   const {
@@ -16,7 +17,8 @@ export default function Admin() {
     generateGroupBrackets,
     advanceToNextPhase,
     isCurrentPhaseComplete,
-    importData
+    importData,
+    exportData
   } = useData();
   const [showConfirm, setShowConfirm] = useState(false);
   const navigate = useNavigate();
@@ -26,9 +28,9 @@ export default function Admin() {
     setShowConfirm(false);
   };
 
-  const exportData = () => {
-    const data = { teams, groups, matches, rankings };
-    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const handleExportData = () => {
+    const dataString = exportData();
+    const blob = new Blob([dataString], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
@@ -45,8 +47,7 @@ export default function Admin() {
       const reader = new FileReader();
       reader.onload = (e) => {
         try {
-          const importedData = JSON.parse(e.target.result);
-          const success = importData(importedData);
+          const success = importData(e.target.result);
           
           if (success) {
             alert('Dados importados com sucesso!');
@@ -160,7 +161,7 @@ export default function Admin() {
         <h2 className="text-lg font-semibold mb-4">Backup e Restauração</h2>
         <div className="flex flex-wrap gap-4">
           <button
-            onClick={exportData}
+            onClick={handleExportData}
             className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 flex items-center gap-2"
           >
             <Download className="w-4 h-4" />
@@ -182,6 +183,9 @@ export default function Admin() {
           Use essas funções para fazer backup dos dados ou restaurar de um backup anterior.
         </p>
       </div>
+
+      {/* Informações de Armazenamento */}
+      <StorageInfo />
 
       <div className="bg-white rounded-lg shadow p-6">
         <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">

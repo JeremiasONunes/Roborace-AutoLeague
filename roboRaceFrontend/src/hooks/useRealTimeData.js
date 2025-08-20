@@ -87,24 +87,33 @@ export const useRealTimeData = () => {
 
   const loadData = () => {
     try {
+      // Tentar carregar dados principais
       const savedData = localStorage.getItem(STORAGE_KEY);
       if (savedData) {
         const parsedData = JSON.parse(savedData);
-        
-        // Mesclar com dados padrão
-        const mergedData = {
-          ...initialData,
-          ...parsedData
-        };
-        
-        // Recalcular rankings
-        mergedData.rankings = calculateRankings(mergedData);
-        setData(mergedData);
-      } else {
-        setData(initialData);
+        if (parsedData && typeof parsedData === 'object') {
+          const mergedData = { ...initialData, ...parsedData };
+          mergedData.rankings = calculateRankings(mergedData);
+          setData(mergedData);
+          return;
+        }
       }
+
+      // Fallback para backup
+      const backupData = localStorage.getItem('roborace_backup');
+      if (backupData) {
+        const parsedBackup = JSON.parse(backupData);
+        if (parsedBackup?.data && typeof parsedBackup.data === 'object') {
+          const mergedData = { ...initialData, ...parsedBackup.data };
+          mergedData.rankings = calculateRankings(mergedData);
+          setData(mergedData);
+          return;
+        }
+      }
+
+      setData(initialData);
     } catch (error) {
-      console.error('Erro ao carregar dados do localStorage:', error);
+      console.error('Erro ao carregar dados:', error);
       setData(initialData);
     }
   };

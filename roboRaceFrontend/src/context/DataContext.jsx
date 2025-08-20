@@ -1,4 +1,6 @@
 import { createContext, useContext, useState, useEffect, useMemo } from 'react';
+import { usePersistentStorage } from '../hooks/usePersistentStorage';
+import { storageManager } from '../utils/storageManager';
 
 const DataContext = createContext();
 
@@ -28,24 +30,20 @@ const initialData = {
 };
 
 export const DataProvider = ({ children }) => {
-  const [data, setData] = useState(initialData);
+  const [data, setData] = useState(() => {
+    // Carregar dados imediatamente usando o gerenciador
+    return storageManager.loadData(initialData);
+  });
 
-  // Carregar dados do localStorage na inicialização
+  // Usar hook de persistência robusta
+  const { validateData } = usePersistentStorage(data, setData, initialData);
+
+  // Salvar dados automaticamente quando mudarem
   useEffect(() => {
-    const savedData = localStorage.getItem(STORAGE_KEY);
-    if (savedData) {
-      try {
-        setData(JSON.parse(savedData));
-      } catch (error) {
-        console.error('Erro ao carregar dados:', error);
-      }
+    if (data && validateData(data)) {
+      storageManager.saveData(data);
     }
-  }, []);
-
-  // Salvar dados no localStorage sempre que houver mudança
-  useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-  }, [data]);
+  }, [data, validateData]);
 
   // Geração de ID único
   const generateId = () => {
@@ -407,37 +405,29 @@ export const DataProvider = ({ children }) => {
 
   // Função para limpar todos os dados
   const clearAllData = () => {
-    setData(initialData);
-    localStorage.removeItem(STORAGE_KEY);
+    try {
+      setData(initialData);
+      storageManager.clearAllData();
+      storageManager.saveData(initialData);
+    } catch (error) {
+      console.error('Erro ao limpar dados:', error);
+    }
   };
 
   // Função para importar dados
-  const importData = (importedData) => {
+  const importData = (jsonString) => {
     try {
-      // Validar estrutura básica dos dados
-      const requiredFields = ['teams', 'groups', 'matches'];
-      const hasRequiredFields = requiredFields.every(field => 
-        importedData.hasOwnProperty(field) && Array.isArray(importedData[field])
-      );
+      const result = storageManager.importData(jsonString, initialData);
       
-      if (!hasRequiredFields) {
-        throw new Error('Estrutura de dados inválida');
+      if (result.success) {
+        // Recalcular rankings baseado nas partidas importadas
+        result.data.rankings = calculateRankings(result.data);
+        setData(result.data);
+        return true;
+      } else {
+        console.error('Erro ao importar:', result.error);
+        return false;
       }
-
-      // Mesclar com dados padrão para garantir compatibilidade
-      const mergedData = {
-        ...initialData,
-        ...importedData,
-        rankings: importedData.rankings || []
-      };
-
-      // Recalcular rankings baseado nas partidas importadas
-      mergedData.rankings = calculateRankings(mergedData);
-      
-      // Atualizar estado
-      setData(mergedData);
-      
-      return true;
     } catch (error) {
       console.error('Erro ao importar dados:', error);
       return false;
@@ -471,6 +461,8 @@ export const DataProvider = ({ children }) => {
     generateGroupBrackets,
     clearAllData,
     importData,
+    exportData: () => storageManager.exportData(),
+    getStorageInfo: () => storageManager.getStorageInfo(),
     
     // Sistema de Fases
     currentPhase: data.currentPhase,

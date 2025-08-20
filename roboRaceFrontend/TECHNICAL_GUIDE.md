@@ -384,40 +384,6 @@ test('should add team correctly', () => {
 });
 ```
 
-## 📦 Build e Deploy
-
-### Configuração de Build
-```javascript
-// vite.config.js
-export default defineConfig({
-  plugins: [react()],
-  build: {
-    outDir: 'dist',
-    sourcemap: true,
-    rollupOptions: {
-      output: {
-        manualChunks: {
-          vendor: ['react', 'react-dom'],
-          router: ['react-router-dom'],
-          icons: ['lucide-react']
-        }
-      }
-    }
-  }
-});
-```
-
-### Environment Variables
-```javascript
-// .env.local
-VITE_APP_NAME=RoboRace
-VITE_API_URL=http://localhost:3000
-VITE_DEBUG=true
-
-// Uso no código
-const appName = import.meta.env.VITE_APP_NAME;
-```
-
 ## 🔒 Segurança
 
 ### Sanitização de Inputs
@@ -452,4 +418,4 @@ const validateTeam = (team) => {
 ---
 
 **Guia técnico para desenvolvedores**  
-*Jeremias O Nunes - 2024*
+*Jeremias O Nunes - 2025*
