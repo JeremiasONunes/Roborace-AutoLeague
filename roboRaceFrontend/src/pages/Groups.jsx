@@ -16,7 +16,7 @@ export default function Groups() {
   };
 
   const handleAddTeamToGroup = (groupId, teamId) => {
-    addTeamToGroup(groupId, parseInt(teamId));
+    addTeamToGroup(groupId, teamId);
   };
 
   const handleRemoveTeamFromGroup = (groupId, teamId) => {

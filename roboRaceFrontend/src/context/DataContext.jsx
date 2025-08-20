@@ -69,13 +69,13 @@ export const DataProvider = ({ children }) => {
   const removeTeam = (teamId) => {
     setData(prev => ({
       ...prev,
-      teams: prev.teams.filter(team => team.id !== teamId),
+      teams: prev.teams.filter(team => team.id != teamId),
       groups: prev.groups.map(group => ({
         ...group,
-        teams: group.teams.filter(team => team.id !== teamId)
+        teams: group.teams.filter(team => team.id != teamId)
       })),
       matches: prev.matches.filter(match => 
-        match.team1.id !== teamId && match.team2.id !== teamId
+        match.team1.id != teamId && match.team2.id != teamId
       )
     }));
   };
@@ -98,18 +98,18 @@ export const DataProvider = ({ children }) => {
   const removeGroup = (groupId) => {
     setData(prev => ({
       ...prev,
-      groups: prev.groups.filter(group => group.id !== groupId)
+      groups: prev.groups.filter(group => group.id != groupId)
     }));
   };
 
   const addTeamToGroup = (groupId, teamId) => {
-    const team = data.teams.find(t => t.id === teamId);
+    const team = data.teams.find(t => t.id == teamId);
     if (!team) return;
 
     setData(prev => ({
       ...prev,
       groups: prev.groups.map(group => {
-        if (group.id === groupId && !group.teams.find(t => t.id === teamId)) {
+        if (group.id == groupId && !group.teams.find(t => t.id == teamId)) {
           return { ...group, teams: [...group.teams, team] };
         }
         return group;
@@ -121,8 +121,8 @@ export const DataProvider = ({ children }) => {
     setData(prev => ({
       ...prev,
       groups: prev.groups.map(group => {
-        if (group.id === groupId) {
-          return { ...group, teams: group.teams.filter(t => t.id !== teamId) };
+        if (group.id == groupId) {
+          return { ...group, teams: group.teams.filter(t => t.id != teamId) };
         }
         return group;
       })
@@ -153,7 +153,7 @@ export const DataProvider = ({ children }) => {
       const updatedData = {
         ...prev,
         matches: prev.matches.map(match => {
-          if (match.id === matchId) {
+          if (match.id == matchId) {
             return {
               ...match,
               status: 'completed',
@@ -170,7 +170,7 @@ export const DataProvider = ({ children }) => {
       updatedData.rankings = calculateRankings(updatedData);
       
       // Verificar se precisa criar partida de desempate na final
-      const completedMatch = updatedData.matches.find(m => m.id === matchId);
+      const completedMatch = updatedData.matches.find(m => m.id == matchId);
       if (completedMatch && completedMatch.phaseType === 'final' && completedMatch.draw) {
         const tiebreakMatch = {
           id: Date.now() + 1000,
@@ -195,7 +195,7 @@ export const DataProvider = ({ children }) => {
       const updatedData = {
         ...prev,
         matches: prev.matches.map(match => {
-          if (match.id === matchId) {
+          if (match.id == matchId) {
             return {
               ...match,
               status: 'pending',
@@ -251,7 +251,7 @@ export const DataProvider = ({ children }) => {
         team2Stats.points += 1;
         team1Stats.draws += 1;
         team2Stats.draws += 1;
-      } else if (match.winner.id === match.team1.id) {
+      } else if (match.winner.id == match.team1.id) {
         team1Stats.points += 3;
         team1Stats.wins += 1;
         team2Stats.losses += 1;
