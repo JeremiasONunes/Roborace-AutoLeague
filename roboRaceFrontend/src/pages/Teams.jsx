@@ -1,12 +1,10 @@
 import { useState } from 'react';
-import { Plus, Trash2, Shuffle, Users } from 'lucide-react';
+import { Plus, Trash2, Users } from 'lucide-react';
 import { useData } from '../context/DataContext';
-import { useNavigate } from 'react-router-dom';
 
 export default function Teams() {
-  const { teams, addTeam, removeTeam, generateRandomBrackets } = useData();
+  const { teams, addTeam, removeTeam } = useData();
   const [newTeamName, setNewTeamName] = useState('');
-  const navigate = useNavigate();
 
   const handleAddTeam = () => {
     if (newTeamName.trim()) {
@@ -21,25 +19,9 @@ export default function Teams() {
 
   return (
     <div className="space-y-8">
-      <div className="flex justify-between items-start">
-        <div>
-          <h1 className="text-2xl font-semibold text-gray-900 mb-2">Equipes</h1>
-          <p className="text-gray-500 text-sm">{teams.length} equipes cadastradas</p>
-        </div>
-        {teams.length >= 2 && (
-          <button
-            onClick={() => {
-              if (confirm('Gerar chaves aleatórias com todas as equipes? Isso criará partidas de forma aleatória.')) {
-                generateRandomBrackets();
-                navigate('/matches');
-              }
-            }}
-            className="px-4 py-2.5 bg-[#2DA63F] text-white rounded-xl hover:bg-[#41A650] flex items-center gap-2 transition-all duration-200 text-sm font-medium shadow-sm"
-          >
-            <Shuffle className="w-4 h-4" />
-            Gerar Chaves
-          </button>
-        )}
+      <div>
+        <h1 className="text-2xl font-semibold text-gray-900 mb-2">Equipes</h1>
+        <p className="text-gray-500 text-sm">{teams.length} equipes cadastradas</p>
       </div>
 
       <div className="bg-white rounded-2xl border border-gray-100 p-6">

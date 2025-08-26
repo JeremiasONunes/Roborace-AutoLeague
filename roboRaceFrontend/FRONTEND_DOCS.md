@@ -137,7 +137,7 @@ Componente principal que fornece a estrutura base da aplicação administrativa.
 - `/groups` - Organização em Grupos
 - `/matches` - Controle de Partidas
 - `/ranking` - Visualização de Rankings
-- `/admin` - Painel Administrativo
+- `/admin` - Painel Administrativo (inclui geração de chaves)
 
 ### ProtectedRoute (`components/ProtectedRoute.jsx`)
 
@@ -152,13 +152,11 @@ Componente para proteção de rotas que requer autenticação.
 - Listagem com busca
 - Remoção de equipes
 - Validação de nomes únicos
-- Geração rápida de chaves
 
 **Interface:**
 - Formulário de cadastro
 - Lista com ações por equipe
 - Contador de equipes
-- Botão de geração de chaves aleatórias
 
 ### Groups (`pages/Groups.jsx`)
 

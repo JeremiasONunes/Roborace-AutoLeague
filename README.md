@@ -103,7 +103,6 @@ roborace/
 - **Cadastro**: Adicionar novas equipes com validação de nome
 - **Listagem**: Visualizar todas as equipes cadastradas
 - **Remoção**: Excluir equipes (remove automaticamente de grupos e partidas)
-- **Geração Automática**: Criar chaves aleatórias com todas as equipes
 
 ### 2. Organização em Grupos (`/groups`)
 - **Criação de Grupos**: Organizar equipes em grupos específicos
@@ -133,7 +132,7 @@ roborace/
 - **Estatísticas Gerais**: Resumo de equipes, grupos, partidas e fase atual
 - **Controle de Fases**: Avanço manual entre fases da competição
 - **Backup/Restore**: Exportar/importar dados em JSON
-- **Geração de Chaves**: Acesso rápido às funções de geração
+- **Geração de Chaves**: Geração de chaves aleatórias e por grupos
 - **Reset Completo**: Limpeza total dos dados (com confirmação)
 
 ### 7. Visualização Pública (`/view`)
@@ -182,6 +181,7 @@ roborace/
 - **Funcionamento**: Embaralha todas as equipes e cria pares aleatórios
 - **Resultado**: Partidas com fase "Chave Aleatória"
 - **Uso**: Competições simples sem divisão por grupos
+- **Acesso**: Disponível no painel administrativo (`/admin`)
 
 #### 2. Chaves por Grupos
 - **Requisito**: Grupos criados com pelo menos 2 equipes cada
@@ -189,6 +189,7 @@ roborace/
 - **Algoritmo**: Para n equipes em um grupo, gera n×(n-1)/2 partidas
 - **Resultado**: Partidas com o nome do grupo como fase
 - **Uso**: Competições com fase de grupos seguida de eliminatórias
+- **Acesso**: Disponível na página de grupos (`/groups`) e no painel administrativo (`/admin`)
 
 ### Validações e Restrições
 
@@ -211,9 +212,9 @@ roborace/
 ## 🔄 Fluxo de Competição Recomendado
 
 ### Configuração Inicial
-1. **Cadastrar Equipes**: Adicionar todas as equipes participantes
-2. **Criar Grupos** (opcional): Organizar equipes em grupos para fase inicial
-3. **Gerar Chaves**: Usar geração automática ou criar partidas manualmente
+1. **Cadastrar Equipes**: Adicionar todas as equipes participantes em `/teams`
+2. **Criar Grupos** (opcional): Organizar equipes em grupos para fase inicial em `/groups`
+3. **Gerar Chaves**: Usar geração automática no painel administrativo (`/admin`) ou criar partidas manualmente em `/matches`
 
 ### Durante a Competição
 1. **Fase de Grupos**: Definir resultados das partidas dos grupos

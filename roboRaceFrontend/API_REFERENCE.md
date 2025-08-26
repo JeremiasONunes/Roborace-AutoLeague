@@ -207,6 +207,9 @@ Gera partidas aleatórias com todas as equipes cadastradas.
 - Cria pares aleatórios
 - Fase definida como "Chave Aleatória"
 
+**Acesso:**
+- Disponível no painel administrativo (`/admin`)
+
 #### `generateGroupBrackets()`
 Gera todas as partidas possíveis dentro de cada grupo.
 

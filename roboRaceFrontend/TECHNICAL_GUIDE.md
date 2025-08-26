@@ -228,6 +228,8 @@ const generateGroupBrackets = () => {
 };
 ```
 
+**Acesso:** Disponível na página de grupos (`/groups`) e no painel administrativo (`/admin`)
+
 ## 🎨 Sistema de Estilos
 
 ### Convenções TailwindCSS

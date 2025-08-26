@@ -76,7 +76,7 @@ export default function Groups() {
       {/* Distribuição Automática */}
       {groups.length > 0 && teams.length > 0 && (
         <div className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-lg font-semibold mb-4">Distribuição Automática</h2>
+          <h2 className="text-lg font-semibold mb-4">Distribuição Automatica</h2>
           <div className="flex items-center gap-4">
             <button
               onClick={() => {
@@ -157,7 +157,7 @@ export default function Groups() {
         <div className="bg-white rounded-lg shadow p-8 text-center">
           <Users className="w-12 h-12 text-gray-400 mx-auto mb-4" />
           <h3 className="text-lg font-medium text-gray-900 mb-2">Nenhum grupo criado</h3>
-          <p className="text-gray-500">Crie grupos para organizar as equipes ou deixe vazio para gerar chaves automáticas</p>
+          <p className="text-gray-500">Crie grupos para organizar as equipes ou deixe vazio para gerar chaves automaticas</p>
         </div>
       )}
 
