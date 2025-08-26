@@ -1,4 +1,4 @@
-import { Trash2, Download, Upload, AlertTriangle, Shuffle, Zap } from 'lucide-react';
+import { Trash2, Download, Upload, AlertTriangle } from 'lucide-react';
 import { useData } from '../context/DataContext';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -13,13 +13,10 @@ export default function Admin() {
     currentPhase,
     phases,
     clearAllData,
-    generateRandomBrackets,
-    generateGroupBrackets,
     advanceToNextPhase,
     isCurrentPhaseComplete,
     importData,
-    exportData,
-    distributeTeamsToGroups
+    exportData
   } = useData();
   const [showConfirm, setShowConfirm] = useState(false);
   const navigate = useNavigate();
@@ -121,60 +118,7 @@ export default function Admin() {
         </div>
       )}
 
-      <div className="bg-white rounded-lg shadow p-6">
-        <h2 className="text-lg font-semibold mb-4">Geração de Chaves</h2>
-        <div className="flex flex-wrap gap-4 mb-4">
-          {teams.length >= 2 && (
-            <button
-              onClick={() => {
-                if (confirm('Gerar chaves aleatórias com todas as equipes?')) {
-                  generateRandomBrackets();
-                  navigate('/matches');
-                }
-              }}
-              className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 flex items-center gap-2"
-            >
-              <Shuffle className="w-4 h-4" />
-              Chaves Aleatórias
-            </button>
-          )}
-          {groups.length > 0 && groups.some(g => g.teams.length >= 2) && (
-            <button
-              onClick={() => {
-                if (confirm('Gerar partidas para todos os grupos?')) {
-                  generateGroupBrackets();
-                  navigate('/matches');
-                }
-              }}
-              className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 flex items-center gap-2"
-            >
-              <Zap className="w-4 h-4" />
-              Chaves por Grupos
-            </button>
-          )}
 
-          {groups.length > 0 && teams.length > 0 && (
-            <button
-              onClick={() => {
-                if (confirm(`Distribuir ${teams.length} equipes igualmente entre ${groups.length} grupos?`)) {
-                  const distributed = distributeTeamsToGroups();
-                  alert(`${distributed} equipes distribuídas!`);
-                  navigate('/groups');
-                }
-              }}
-              className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 flex items-center gap-2"
-            >
-              <Shuffle className="w-4 h-4" />
-              Distribuir Equipes
-            </button>
-          )}
-        </div>
-        <p className="text-sm text-gray-500 mb-6">
-          Gere partidas automaticamente ou distribua equipes em grupos de forma equilibrada.
-        </p>
-        
-
-      </div>
 
       <div className="bg-white rounded-lg shadow p-6">
         <h2 className="text-lg font-semibold mb-4">Backup e Restauração</h2>
