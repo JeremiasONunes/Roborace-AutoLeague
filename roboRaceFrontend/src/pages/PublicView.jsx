@@ -6,15 +6,45 @@ export default function PublicView() {
   const data = useRealTimeData();
   const { teams, matches, rankings, currentPhase, phases } = data;
 
-  const { pendingMatches, completedMatches } = useMemo(() => {
+  const { pendingMatches, completedMatches, displayRankings } = useMemo(() => {
     const pending = matches.filter(m => m.status === 'pending').slice(0, 4);
     const completed = matches.filter(m => m.status === 'completed');
     
+    // Lógica de ranking para mata-mata
+    let displayRankings = rankings;
+    
+    if (currentPhase !== 'groups') {
+      const finalMatches = matches.filter(m => m.phaseType === 'final' && m.status === 'completed');
+      const semifinalMatches = matches.filter(m => m.phaseType === 'semifinals' && m.status === 'completed');
+      const finalMatch = finalMatches.find(m => m.phase === 'Final');
+      const thirdPlaceMatch = finalMatches.find(m => m.phase === 'Disputa do 3º Lugar');
+      
+      if (currentPhase === 'final' && finalMatch && thirdPlaceMatch) {
+        // Classificação final completa
+        displayRankings = [
+          { position: 1, team: finalMatch.winner, points: 'Campeão', wins: 0, draws: 0, losses: 0, group: 'Final' },
+          { position: 2, team: finalMatch.winner?.id === finalMatch.team1.id ? finalMatch.team2 : finalMatch.team1, points: 'Vice', wins: 0, draws: 0, losses: 0, group: 'Final' },
+          { position: 3, team: thirdPlaceMatch.winner, points: '3º', wins: 0, draws: 0, losses: 0, group: '3º Lugar' },
+          { position: 4, team: thirdPlaceMatch.winner?.id === thirdPlaceMatch.team1.id ? thirdPlaceMatch.team2 : thirdPlaceMatch.team1, points: '4º', wins: 0, draws: 0, losses: 0, group: '4º Lugar' }
+        ];
+      } else if (currentPhase === 'semifinals' && semifinalMatches.length === 2) {
+        // Classificados para a final
+        const winners = semifinalMatches.map(m => m.winner).filter(Boolean);
+        const losers = semifinalMatches.map(m => m.winner?.id === m.team1.id ? m.team2 : m.team1).filter(Boolean);
+        
+        displayRankings = [
+          ...winners.map((team, index) => ({ position: index + 1, team, points: 'Final', wins: 0, draws: 0, losses: 0, group: 'Finalista' })),
+          ...losers.map((team, index) => ({ position: index + 3, team, points: '3º', wins: 0, draws: 0, losses: 0, group: 'Disputa 3º' }))
+        ];
+      }
+    }
+    
     return {
       pendingMatches: pending,
-      completedMatches: completed
+      completedMatches: completed,
+      displayRankings
     };
-  }, [matches]);
+  }, [matches, rankings, currentPhase]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#A7D9AE] via-[#B8E0BF] to-[#C9E7D0] relative overflow-x-hidden">
@@ -85,10 +115,10 @@ export default function PublicView() {
                   <Trophy className="w-5 h-5 text-yellow-600" />
                   <h2 className="text-lg font-bold text-gray-900">Classificação Geral</h2>
                 </div>
-                <div className="text-sm text-gray-500">{rankings.length} equipes</div>
+                <div className="text-sm text-gray-500">{displayRankings.length} equipes</div>
               </div>
             
-              {rankings.length > 0 ? (
+              {displayRankings.length > 0 ? (
                 <div className="overflow-y-auto h-[414px]">
                   <table className="min-w-full">
                     <thead className="bg-gray-50 sticky top-0">
@@ -102,7 +132,7 @@ export default function PublicView() {
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200">
-                      {rankings.map((team) => (
+                      {displayRankings.map((team) => (
                         <tr key={team.team.id} className={`${
                           team.position === 1 ? 'bg-yellow-50 border-l-2 border-yellow-400' :
                           team.position === 2 ? 'bg-gray-50 border-l-2 border-gray-400' :
@@ -114,8 +144,7 @@ export default function PublicView() {
                               {team.position === 1 ? <Trophy className="w-4 h-4 text-yellow-600" /> :
                                team.position === 2 ? <Medal className="w-4 h-4 text-gray-500" /> :
                                team.position === 3 ? <Award className="w-4 h-4 text-amber-600" /> :
-                               <span className="text-sm font-bold text-gray-600">{team.position}</span>}
-                              <span className="text-sm font-medium">{team.position}º</span>
+                               <span className="text-sm font-bold text-gray-600">{team.position}º</span>}
                             </div>
                           </td>
                           <td className="px-3 py-2">
@@ -173,7 +202,7 @@ export default function PublicView() {
                   <h2 className="text-lg font-bold text-gray-900">Pódio</h2>
                 </div>
                 <div className="space-y-2">
-                  {rankings.slice(0, 3).map((team) => (
+                  {displayRankings.slice(0, 3).map((team) => (
                     <div key={team.team.id} className={`p-2 rounded-lg border-l-2 ${
                       team.position === 1 ? 'bg-yellow-50 border-yellow-400' :
                       team.position === 2 ? 'bg-gray-50 border-gray-400' :
