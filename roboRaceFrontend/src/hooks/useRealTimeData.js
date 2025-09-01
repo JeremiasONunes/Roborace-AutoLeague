@@ -10,8 +10,6 @@ const initialData = {
   currentPhase: 'groups',
   phases: {
     groups: { name: 'Fase de Grupos', completed: false },
-    round16: { name: 'Oitavas de Final', completed: false },
-    quarterfinals: { name: 'Quartas de Final', completed: false },
     semifinals: { name: 'Semifinais', completed: false },
     final: { name: 'Final', completed: false }
   }
@@ -49,8 +47,10 @@ export const useRealTimeData = () => {
       });
     }
 
-    if (currentData.matches && currentData.matches.length > 0) {
-      currentData.matches.filter(match => match.status === 'completed').forEach(match => {
+    if (currentData.matches && currentData.matches.length > 0 && currentData.currentPhase === 'groups') {
+      currentData.matches
+        .filter(match => match.status === 'completed' && match.phaseType === 'groups')
+        .forEach(match => {
         const team1Stats = teamStats[match.team1?.id];
         const team2Stats = teamStats[match.team2?.id];
 

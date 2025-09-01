@@ -1,5 +1,6 @@
 import { Trophy, Medal, Award } from 'lucide-react';
 import { useData } from '../context/DataContext';
+import FinalRanking from '../components/FinalRanking';
 
 export default function Ranking() {
   const { rankings, matches } = useData();
@@ -44,6 +45,8 @@ export default function Ranking() {
         <span className="text-sm text-gray-500">Atualizado em tempo real</span>
       </div>
 
+      <FinalRanking />
+      
       {rankings.length > 0 ? (
         <>
           <div className="bg-white rounded-lg shadow overflow-hidden">
@@ -151,9 +154,12 @@ export default function Ranking() {
                 <h3 className="text-lg font-semibold">Sistema de Pontos</h3>
               </div>
               <div className="text-sm space-y-1">
+                <div className="font-medium text-gray-700 mb-1">Fase de Grupos:</div>
                 <div>Vitória: <span className="font-semibold text-[#2DA63F]">3 pontos</span></div>
                 <div>Empate: <span className="font-semibold text-[#75BF80]">1 ponto</span></div>
                 <div>Derrota: <span className="font-semibold">0 pontos</span></div>
+                <div className="font-medium text-gray-700 mt-2 mb-1">Eliminatórias:</div>
+                <div className="text-xs text-gray-600">Ganhou = Classificou</div>
               </div>
             </div>
           </div>

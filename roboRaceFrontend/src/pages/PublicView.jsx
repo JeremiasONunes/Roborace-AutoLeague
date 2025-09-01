@@ -48,7 +48,7 @@ export default function PublicView() {
           {phases && (
             <div className="bg-white rounded-lg border border-gray-100 p-4">
               <div className="flex items-center justify-between">
-                {['groups', 'round16', 'quarterfinals', 'semifinals', 'final'].map((phase, index, array) => (
+                {['groups', 'semifinals', 'final'].map((phase, index, array) => (
                   <div key={phase} className="flex items-center">
                     <div className={`flex items-center gap-2 ${phase === currentPhase ? 'text-[#2DA63F]' : phases[phase]?.completed ? 'text-[#41A650]' : 'text-gray-400'}`}>
                       <div className={`w-6 h-6 rounded-full flex items-center justify-center ${

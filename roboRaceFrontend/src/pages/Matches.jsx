@@ -170,7 +170,7 @@ export default function Matches() {
             </div>
             <button
               onClick={() => {
-                const phaseOrder = ['groups', 'round16', 'quarterfinals', 'semifinals', 'final'];
+                const phaseOrder = ['groups', 'semifinals', 'final'];
                 const currentPhaseIndex = phaseOrder.indexOf(currentPhase);
                 if (confirm(`Avançar para ${phases[phaseOrder[currentPhaseIndex + 1]].name}? Isso criará as partidas eliminatórias.`)) {
                   advanceToNextPhase();
@@ -301,12 +301,14 @@ export default function Matches() {
                   <Trophy className="w-4 h-4" />
                   {match.team1.name} Venceu
                 </button>
-                <button
-                  onClick={() => handleUpdateMatchResult(match.id, null, true)}
-                  className="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700"
-                >
-                  Empate
-                </button>
+                {match.phaseType === 'groups' && (
+                  <button
+                    onClick={() => handleUpdateMatchResult(match.id, null, true)}
+                    className="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700"
+                  >
+                    Empate
+                  </button>
+                )}
                 <button
                   onClick={() => handleUpdateMatchResult(match.id, match.team2)}
                   className="px-4 py-2 bg-[#2DA63F] text-white rounded-md hover:bg-[#41A650] flex items-center gap-2"

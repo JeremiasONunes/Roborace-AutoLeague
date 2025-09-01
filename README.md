@@ -144,9 +144,15 @@ roborace/
 ## ⚙️ Regras de Negócio
 
 ### Sistema de Pontuação
+
+#### Fase de Grupos
 - **Vitória**: 3 pontos
 - **Empate**: 1 ponto
 - **Derrota**: 0 pontos
+
+#### Fases Eliminatórias (Semifinais e Final)
+- **Ganhou = Classificou** (sem empates, sem pontos)
+- **Classificação**: Vencedor avança, perdedor é eliminado
 
 ### Critérios de Classificação (em ordem de prioridade)
 1. **Pontos totais** (maior número)
@@ -157,22 +163,19 @@ roborace/
 
 #### Fases Disponíveis
 1. **Fase de Grupos**: Partidas dentro dos grupos criados
-2. **Oitavas de Final**: 16 melhores equipes (8 partidas)
-3. **Quartas de Final**: 8 melhores equipes (4 partidas)
-4. **Semifinais**: 4 melhores equipes (2 partidas)
-5. **Final**: 2 melhores equipes (1 partida)
+2. **Semifinais**: 4 melhores equipes (2 partidas)
+3. **Final**: 2 melhores equipes + disputa do 3º lugar
 
 #### Evolução entre Fases
 - **Automática**: Sistema detecta quando todas as partidas da fase atual estão concluídas
-- **Classificação**: Equipes são classificadas automaticamente baseadas no ranking
+- **Classificação**: 2 primeiros de cada grupo se classificam para as semifinais
 - **Geração de Partidas**: Partidas eliminatórias são criadas automaticamente
-- **Emparelhamento**: Melhor classificado vs pior classificado em cada confronto
+- **Emparelhamento**: Classificados são embaralhados aleatoriamente
 
 #### Critérios de Classificação por Fase
-- **Oitavas**: Top 16 equipes do ranking geral
-- **Quartas**: Top 8 equipes do ranking geral
-- **Semifinais**: Top 4 equipes do ranking geral
-- **Final**: Top 2 equipes do ranking geral
+- **Semifinais**: 2 primeiros colocados de cada grupo
+- **Final**: Vencedores das semifinais disputam o 1º lugar
+- **3º Lugar**: Perdedores das semifinais disputam o 3º lugar
 
 ### Geração de Chaves
 
@@ -213,15 +216,16 @@ roborace/
 
 ### Configuração Inicial
 1. **Cadastrar Equipes**: Adicionar todas as equipes participantes em `/teams`
-2. **Criar Grupos** (opcional): Organizar equipes em grupos para fase inicial em `/groups`
-3. **Gerar Chaves**: Usar geração automática no painel administrativo (`/admin`) ou criar partidas manualmente em `/matches`
+2. **Criar Grupos**: Organizar equipes em grupos (obrigatório) em `/groups`
+3. **Gerar Chaves**: Usar geração por grupos no painel administrativo (`/admin`)
 
 ### Durante a Competição
-1. **Fase de Grupos**: Definir resultados das partidas dos grupos
-2. **Acompanhar Ranking**: Verificar classificação atualizada automaticamente
-3. **Avançar Fases**: Sistema detecta automaticamente quando pode avançar
-4. **Fases Eliminatórias**: Partidas únicas com eliminação direta
-5. **Visualização Pública**: Usar `/view` para exibição ao público
+1. **Fase de Grupos**: Definir resultados das partidas dos grupos (com empates permitidos)
+2. **Acompanhar Ranking**: Verificar classificação por grupo
+3. **Avançar para Semifinais**: 2 primeiros de cada grupo se classificam
+4. **Semifinais**: Partidas eliminatórias (sem empate)
+5. **Final**: Vencedores das semifinais + disputa do 3º lugar
+6. **Visualização Pública**: Usar `/view` para exibição ao público
 
 ### Funcionalidades Avançadas
 1. **Controle de Fases**: Gerenciar progressão da competição em `/phases`

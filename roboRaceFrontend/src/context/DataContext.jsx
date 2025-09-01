@@ -19,11 +19,9 @@ const initialData = {
   groups: [],
   matches: [],
   rankings: [],
-  currentPhase: 'groups', // groups, round16, quarterfinals, semifinals, final
+  currentPhase: 'groups', // groups, semifinals, final
   phases: {
     groups: { name: 'Fase de Grupos', completed: false },
-    round16: { name: 'Oitavas de Final', completed: false },
-    quarterfinals: { name: 'Quartas de Final', completed: false },
     semifinals: { name: 'Semifinais', completed: false },
     final: { name: 'Final', completed: false }
   }
@@ -237,8 +235,12 @@ export const DataProvider = ({ children }) => {
       });
     });
 
-    // Calcular estatísticas baseado nas partidas
-    currentData.matches.filter(match => match.status === 'completed').forEach(match => {
+    // Calcular estatísticas baseado apenas nas partidas da fase de grupos
+    // Se já chegou na semifinal, não atualizar mais os pontos
+    if (currentData.currentPhase === 'groups') {
+      currentData.matches
+        .filter(match => match.status === 'completed' && match.phaseType === 'groups')
+        .forEach(match => {
       const team1Stats = teamStats[match.team1.id];
       const team2Stats = teamStats[match.team2.id];
 
@@ -257,8 +259,9 @@ export const DataProvider = ({ children }) => {
         team2Stats.points += 3;
         team2Stats.wins += 1;
         team1Stats.losses += 1;
-      }
-    });
+        }
+      });
+    }
 
     // Converter para array e ordenar
     return Object.values(teamStats)
@@ -335,7 +338,7 @@ export const DataProvider = ({ children }) => {
 
   // Função para avançar para próxima fase
   const advanceToNextPhase = () => {
-    const phaseOrder = ['groups', 'round16', 'quarterfinals', 'semifinals', 'final'];
+    const phaseOrder = ['groups', 'semifinals', 'final'];
     const currentIndex = phaseOrder.indexOf(data.currentPhase);
     
     if (currentIndex === -1 || currentIndex === phaseOrder.length - 1) return;
@@ -360,11 +363,73 @@ export const DataProvider = ({ children }) => {
 
   // Função para obter equipes classificadas
   const getQualifiedTeams = () => {
+    if (data.currentPhase === 'groups') {
+      // Classificar 2 primeiros de cada grupo
+      const qualifiedTeams = [];
+      
+      data.groups.forEach(group => {
+        // Calcular ranking específico do grupo
+        const groupTeamStats = {};
+        
+        // Inicializar stats para equipes do grupo
+        group.teams.forEach(team => {
+          groupTeamStats[team.id] = {
+            team,
+            points: 0,
+            wins: 0,
+            draws: 0,
+            losses: 0,
+            group: group.name
+          };
+        });
+        
+        // Calcular estatísticas baseado nas partidas do grupo
+        data.matches
+          .filter(match => match.status === 'completed' && match.phaseType === 'groups')
+          .filter(match => 
+            group.teams.some(t => t.id === match.team1.id) && 
+            group.teams.some(t => t.id === match.team2.id)
+          )
+          .forEach(match => {
+            const team1Stats = groupTeamStats[match.team1.id];
+            const team2Stats = groupTeamStats[match.team2.id];
+            
+            if (!team1Stats || !team2Stats) return;
+            
+            if (match.draw) {
+              team1Stats.points += 1;
+              team2Stats.points += 1;
+              team1Stats.draws += 1;
+              team2Stats.draws += 1;
+            } else if (match.winner.id == match.team1.id) {
+              team1Stats.points += 3;
+              team1Stats.wins += 1;
+              team2Stats.losses += 1;
+            } else {
+              team2Stats.points += 3;
+              team2Stats.wins += 1;
+              team1Stats.losses += 1;
+            }
+          });
+        
+        // Ordenar e pegar os 2 primeiros do grupo
+        const groupRanking = Object.values(groupTeamStats)
+          .sort((a, b) => {
+            if (b.points !== a.points) return b.points - a.points;
+            if (b.wins !== a.wins) return b.wins - a.wins;
+            return a.losses - b.losses;
+          });
+        
+        // Adicionar os 2 primeiros (se existirem)
+        qualifiedTeams.push(...groupRanking.slice(0, 2));
+      });
+      
+      return qualifiedTeams;
+    }
+    
+    // Para outras fases, usar ranking geral
     const currentRankings = calculateRankings(data);
     const phaseTeamCounts = {
-      groups: 16,
-      round16: 8,
-      quarterfinals: 4,
       semifinals: 2,
       final: 1
     };
@@ -405,17 +470,57 @@ export const DataProvider = ({ children }) => {
     const matches = [];
     let matchId = Date.now();
     
-    for (let i = 0; i < teams.length; i += 2) {
-      if (teams[i + 1]) {
+    if (phase === 'semifinals') {
+      // Embaralhar as equipes classificadas para criar semifinais
+      const shuffledTeams = [...teams].sort(() => Math.random() - 0.5);
+      
+      for (let i = 0; i < shuffledTeams.length; i += 2) {
+        if (shuffledTeams[i + 1]) {
+          matches.push({
+            id: matchId++,
+            team1: shuffledTeams[i].team,
+            team2: shuffledTeams[i + 1].team,
+            status: 'pending',
+            winner: null,
+            draw: false,
+            phase: data.phases[phase].name,
+            phaseType: phase,
+            createdAt: new Date().toISOString()
+          });
+        }
+      }
+    } else if (phase === 'final') {
+      // Pegar vencedores das semifinais para a final
+      const semifinalMatches = data.matches.filter(m => m.phaseType === 'semifinals' && m.status === 'completed');
+      const winners = semifinalMatches.map(m => m.winner).filter(Boolean);
+      const losers = semifinalMatches.map(m => m.winner?.id === m.team1.id ? m.team2 : m.team1).filter(Boolean);
+      
+      // Criar final
+      if (winners.length >= 2) {
         matches.push({
           id: matchId++,
-          team1: teams[i].team,
-          team2: teams[i + 1].team,
+          team1: winners[0],
+          team2: winners[1],
           status: 'pending',
           winner: null,
           draw: false,
-          phase: data.phases[phase].name,
-          phaseType: phase,
+          phase: 'Final',
+          phaseType: 'final',
+          createdAt: new Date().toISOString()
+        });
+      }
+      
+      // Criar disputa do 3º lugar
+      if (losers.length >= 2) {
+        matches.push({
+          id: matchId++,
+          team1: losers[0],
+          team2: losers[1],
+          status: 'pending',
+          winner: null,
+          draw: false,
+          phase: 'Disputa do 3º Lugar',
+          phaseType: 'final',
           createdAt: new Date().toISOString()
         });
       }
