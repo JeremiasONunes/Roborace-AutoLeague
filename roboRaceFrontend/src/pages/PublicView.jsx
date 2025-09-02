@@ -4,9 +4,9 @@ import { useMemo } from 'react';
 
 export default function PublicView() {
   const data = useRealTimeData();
-  const { teams, matches, rankings, currentPhase, phases } = data;
+  const { _teams, matches, rankings, currentPhase, phases } = data;
 
-  const { pendingMatches, completedMatches, displayRankings } = useMemo(() => {
+  const { pendingMatches, _completedMatches, displayRankings } = useMemo(() => {
     const pending = matches.filter(m => m.status === 'pending').slice(0, 4);
     const completed = matches.filter(m => m.status === 'completed');
     
@@ -47,16 +47,16 @@ export default function PublicView() {
   }, [matches, rankings, currentPhase]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#A7D9AE] via-[#B8E0BF] to-[#C9E7D0] relative overflow-x-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-[#B3E5FC] via-[#81D4FA] to-[#4FC3F7] relative overflow-x-hidden">
       
 
       <main className="max-w-7xl mx-auto py-4 px-6">
         <div className="space-y-4">
-          <div className="bg-gradient-to-r from-[#2DA63F] to-[#41A650] rounded-xl p-2 text-white shadow-xl">
+          <div className="bg-gradient-to-r from-[#40BBD9] to-[#43CAD9] rounded-xl p-2 text-white shadow-xl">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-6">
-                <div className="w-20 h-20 bg-white rounded-full p-3">
-                  <img src="/logo.png" alt="Roborace Univas" className="w-full h-full object-contain" />
+                <div className="w-40 h-40 bg-white rounded-full p-6 flex-shrink-0">
+                  <img src="/publicLogo.png" alt="Roborace Univas" className="w-full h-full object-contain" />
                 </div>
                 <div>
                   <h1 className="text-4xl font-bold mb-1">Roborace Univas</h1>
@@ -80,10 +80,10 @@ export default function PublicView() {
               <div className="flex items-center justify-between">
                 {['groups', 'semifinals', 'final'].map((phase, index, array) => (
                   <div key={phase} className="flex items-center">
-                    <div className={`flex items-center gap-2 ${phase === currentPhase ? 'text-[#2DA63F]' : phases[phase]?.completed ? 'text-[#41A650]' : 'text-gray-400'}`}>
+                    <div className={`flex items-center gap-2 ${phase === currentPhase ? 'text-[#40BBD9]' : phases[phase]?.completed ? 'text-[#43CAD9]' : 'text-gray-400'}`}>
                       <div className={`w-6 h-6 rounded-full flex items-center justify-center ${
-                        phases[phase]?.completed ? 'bg-[#41A650]' :
-                        phase === currentPhase ? 'bg-[#2DA63F]' : 'bg-gray-200'
+                        phases[phase]?.completed ? 'bg-[#43CAD9]' :
+                        phase === currentPhase ? 'bg-[#40BBD9]' : 'bg-gray-200'
                       }`}>
                         {phases[phase]?.completed ? (
                           <CheckCircle className="w-3 h-3 text-white" />
@@ -97,7 +97,7 @@ export default function PublicView() {
                     </div>
                     {index < array.length - 1 && (
                       <div className={`w-8 h-px mx-2 ${
-                        phases[array[index + 1]]?.completed || array[index + 1] === currentPhase ? 'bg-[#2DA63F]' : 'bg-gray-200'
+                        phases[array[index + 1]]?.completed || array[index + 1] === currentPhase ? 'bg-[#40BBD9]' : 'bg-gray-200'
                       }`}></div>
                     )}
                   </div>
@@ -152,9 +152,9 @@ export default function PublicView() {
                             <div className="text-xs text-gray-500">{team.group}</div>
                           </td>
                           <td className="px-3 py-2 text-center">
-                            <span className="inline-flex items-center px-2 py-1 bg-[#2DA63F]/10 rounded text-sm font-bold text-[#2DA63F]">{team.points}</span>
+                            <span className="inline-flex items-center px-2 py-1 bg-[#40BBD9]/10 rounded text-sm font-bold text-[#40BBD9]">{team.points}</span>
                           </td>
-                          <td className="px-3 py-2 text-center text-sm font-semibold text-[#41A650]">{team.wins}</td>
+                          <td className="px-3 py-2 text-center text-sm font-semibold text-[#43CAD9]">{team.wins}</td>
                           <td className="px-3 py-2 text-center text-sm font-semibold text-gray-600">{team.draws}</td>
                           <td className="px-3 py-2 text-center text-sm font-semibold text-red-500">{team.losses}</td>
                         </tr>
@@ -172,12 +172,12 @@ export default function PublicView() {
               {/* Próximas Partidas */}
               <div className="bg-white rounded-xl shadow-xl border border-gray-100 p-4 h-48">
                 <div className="flex items-center gap-2 mb-4">
-                  <Calendar className="w-5 h-5 text-[#2DA63F]" />
+                  <Calendar className="w-5 h-5 text-[#40BBD9]" />
                   <h2 className="text-lg font-bold text-gray-900">Próximas Partidas</h2>
                 </div>
                 <div className="space-y-3 max-h-32 overflow-y-auto">
                   {pendingMatches.slice(0, 1).map((match) => (
-                    <div key={match.id} className="bg-gray-50 border-l-2 border-[#2DA63F] rounded p-3">
+                    <div key={match.id} className="bg-gray-50 border-l-2 border-[#40BBD9] rounded p-3">
                       <div className="flex justify-between items-center mb-2">
                         <span className="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded">{match.phase}</span>
                         <div className="flex items-center gap-1 text-xs text-yellow-700">
@@ -187,7 +187,7 @@ export default function PublicView() {
                       </div>
                       <div className="text-center">
                         <div className="text-sm font-bold">{match.team1.name}</div>
-                        <div className="text-xs text-[#2DA63F] font-bold my-1">VS</div>
+                        <div className="text-xs text-[#40BBD9] font-bold my-1">VS</div>
                         <div className="text-sm font-bold">{match.team2.name}</div>
                       </div>
                     </div>
@@ -223,7 +223,7 @@ export default function PublicView() {
                           </div>
                         </div>
                         <div className="text-right">
-                          <div className="text-lg font-bold text-[#2DA63F]">{team.points}</div>
+                          <div className="text-lg font-bold text-[#40BBD9]">{team.points}</div>
                           <div className="text-xs text-gray-500">{team.wins}V {team.draws}E {team.losses}D</div>
                         </div>
                       </div>

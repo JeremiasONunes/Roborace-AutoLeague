@@ -55,7 +55,7 @@ export default function Matches() {
     if (match.draw) {
       return <span className="px-2 py-1 bg-gray-100 text-gray-800 text-xs rounded-full">Empate</span>;
     }
-    return <span className="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full flex items-center gap-1">
+    return <span className="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded-full flex items-center gap-1">
       <Trophy className="w-3 h-3" />
       Finalizada
     </span>;
@@ -73,7 +73,7 @@ export default function Matches() {
           {teams.length >= 2 && (
             <button
               onClick={() => setShowAddMatch(!showAddMatch)}
-              className="px-4 py-2 bg-[#2DA63F] text-white rounded-md hover:bg-[#41A650] flex items-center gap-2"
+              className="px-4 py-2 bg-[#40BBD9] text-white rounded-md hover:bg-[#43CAD9] flex items-center gap-2"
             >
               <Plus className="w-4 h-4" />
               Nova Partida
@@ -116,7 +116,7 @@ export default function Matches() {
             <button
               onClick={handleAddMatch}
               disabled={!newMatch.team1Id || !newMatch.team2Id || newMatch.team1Id === newMatch.team2Id}
-              className="px-4 py-2 bg-[#41A650] text-white rounded-md hover:bg-[#2DA63F] disabled:bg-gray-400"
+              className="px-4 py-2 bg-[#40BBD9] text-white rounded-md hover:bg-[#43CAD9] disabled:bg-gray-400"
             >
               Criar Partida
             </button>
@@ -128,7 +128,7 @@ export default function Matches() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
         <div className="bg-white rounded-lg shadow p-6">
           <div className="flex items-center gap-3 mb-2">
-            <Play className="w-6 h-6 text-[#2DA63F]" />
+            <Play className="w-6 h-6 text-[#40BBD9]" />
             <h3 className="text-lg font-semibold">Fase Atual</h3>
           </div>
           <p className="text-2xl font-bold text-gray-900">{phases[currentPhase].name}</p>
@@ -139,7 +139,7 @@ export default function Matches() {
 
         <div className="bg-white rounded-lg shadow p-6">
           <div className="flex items-center gap-3 mb-2">
-            <Users className="w-6 h-6 text-[#41A650]" />
+            <Users className="w-6 h-6 text-[#40BBD9]" />
             <h3 className="text-lg font-semibold">Equipes Classificadas</h3>
           </div>
           <p className="text-2xl font-bold text-gray-900">{getQualifiedTeams().length}</p>
@@ -158,13 +158,13 @@ export default function Matches() {
 
       {/* Botão para Avançar Fase */}
       {isCurrentPhaseComplete() && currentPhase !== 'final' && (
-        <div className="bg-green-50 border border-green-200 rounded-lg p-6 mb-6">
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-6">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-lg font-semibold text-green-800">
+              <h3 className="text-lg font-semibold text-blue-700">
                 Fase {phases[currentPhase].name} Concluída!
               </h3>
-              <p className="text-green-700 mt-1">
+              <p className="text-blue-600 mt-1">
                 Todas as partidas foram finalizadas. Você pode avançar para a próxima fase.
               </p>
             </div>
@@ -176,7 +176,7 @@ export default function Matches() {
                   advanceToNextPhase();
                 }
               }}
-              className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 flex items-center gap-2"
+              className="px-6 py-3 bg-[#40BBD9] text-white rounded-lg hover:bg-[#43CAD9] flex items-center gap-2"
             >
               <ChevronRight className="w-4 h-4" />
               Avançar Fase
@@ -195,7 +195,7 @@ export default function Matches() {
             
             return (
               <span key={key} className={`px-3 py-1 rounded-full text-xs font-medium ${
-                key === currentPhase ? 'bg-[#A7D9AE] text-[#2DA63F]' : 'bg-gray-100 text-gray-600'
+                key === currentPhase ? 'bg-[#40BBD9] text-white' : 'bg-gray-100 text-gray-600'
               }`}>
                 {phase.name} ({phaseMatches.length})
               </span>
@@ -218,7 +218,7 @@ export default function Matches() {
                   <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white font-bold ${
                     index === 0 ? 'bg-yellow-500' :
                     index === 1 ? 'bg-gray-400' :
-                    index === 2 ? 'bg-amber-600' : 'bg-[#2DA63F]'
+                    index === 2 ? 'bg-amber-600' : 'bg-[#40BBD9]'
                   }`}>
                     {index + 1}
                   </div>
@@ -256,9 +256,9 @@ export default function Matches() {
           <div key={match.id} className="bg-white rounded-lg shadow p-6">
             <div className="flex justify-between items-start mb-4">
               <div className="flex items-center gap-2">
-                <span className="text-sm font-medium text-gray-600">{match.phase}</span>
+                <span className="text-sm font-medium text-gray-900">{match.phase}</span>
                 <span className={`px-2 py-1 text-xs rounded-full ${
-                  match.phaseType === currentPhase ? 'bg-[#A7D9AE] text-[#2DA63F]' : 'bg-gray-100 text-gray-600'
+                  match.phaseType === currentPhase ? 'bg-[#40BBD9] text-white' : 'bg-gray-100 text-gray-600'
                 }`}>
                   {phases[match.phaseType]?.name || 'Fase Personalizada'}
                 </span>
@@ -285,7 +285,7 @@ export default function Matches() {
                 {match.draw ? (
                   <span className="text-gray-600 font-medium">Resultado: Empate</span>
                 ) : (
-                  <span className="text-green-600 font-medium">
+                  <span className="text-blue-600 font-medium">
                     Vencedor: {match.winner.name}
                   </span>
                 )}
@@ -296,7 +296,7 @@ export default function Matches() {
               <div className="mt-6 flex justify-center gap-4">
                 <button
                   onClick={() => handleUpdateMatchResult(match.id, match.team1)}
-                  className="px-4 py-2 bg-[#2DA63F] text-white rounded-md hover:bg-[#41A650] flex items-center gap-2"
+                  className="px-4 py-2 bg-[#40BBD9] text-white rounded-md hover:bg-[#43CAD9] flex items-center gap-2"
                 >
                   <Trophy className="w-4 h-4" />
                   {match.team1.name} Venceu
@@ -311,7 +311,7 @@ export default function Matches() {
                 )}
                 <button
                   onClick={() => handleUpdateMatchResult(match.id, match.team2)}
-                  className="px-4 py-2 bg-[#2DA63F] text-white rounded-md hover:bg-[#41A650] flex items-center gap-2"
+                  className="px-4 py-2 bg-[#40BBD9] text-white rounded-md hover:bg-[#43CAD9] flex items-center gap-2"
                 >
                   <Trophy className="w-4 h-4" />
                   {match.team2.name} Venceu

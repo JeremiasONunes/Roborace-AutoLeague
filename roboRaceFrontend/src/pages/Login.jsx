@@ -31,11 +31,11 @@ export default function Login({ onLogin }) {
   };
 
   return (
-    <div className="min-h-screen bg-[#A7D9AE] flex items-center justify-center p-4">
+    <div className="min-h-screen bg-[#40BBD9] flex items-center justify-center p-4">
       <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-10 w-full max-w-md">
         <div className="text-center mb-10">
           <div className="mx-auto w-32 h-32 mb-6">
-            <img src="/logo.png" alt="Roborace Univas" className="w-full h-full object-contain" />
+            <img src="/publicLogo.png" alt="Roborace Univas" className="w-full h-full object-contain" />
           </div>
           <h1 className="text-2xl font-semibold text-gray-900 mb-2">Roborace Univas</h1>
           <p className="text-gray-500 text-sm">Sistema</p>
@@ -69,7 +69,7 @@ export default function Login({ onLogin }) {
                 type={showPassword ? 'text' : 'password'}
                 value={credentials.password}
                 onChange={(e) => setCredentials({...credentials, password: e.target.value})}
-                className="w-full pl-11 pr-12 py-3.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#2DA63F]/20 focus:border-[#2DA63F] transition-all duration-200 bg-gray-50/50"
+                className="w-full pl-11 pr-12 py-3.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#40BBD9]/20 focus:border-[#40BBD9] transition-all duration-200 bg-gray-50/50"
                 placeholder="Digite sua senha"
                 required
               />
@@ -92,7 +92,7 @@ export default function Login({ onLogin }) {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-[#2DA63F] text-white py-3.5 px-4 rounded-xl hover:bg-[#41A650] focus:outline-none focus:ring-2 focus:ring-[#2DA63F]/20 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 font-medium mt-8"
+            className="w-full bg-[#40BBD9] text-white py-3.5 px-4 rounded-xl hover:bg-[#40BBD9] focus:outline-none focus:ring-2 focus:ring-[#40BBD9]/20 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 font-medium mt-8"
           >
             {loading ? 'Entrando...' : 'Entrar'}
           </button>

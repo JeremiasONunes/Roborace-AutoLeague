@@ -43,7 +43,7 @@ export default function Groups() {
                 title: 'Gerar Partidas',
                 message: 'Gerar partidas para todos os grupos? Isso criará jogos entre todas as equipes de cada grupo.'
               })}
-              className="px-4 py-2 bg-[#41A650] text-white rounded-md hover:bg-[#2DA63F] flex items-center gap-2"
+              className="px-4 py-2 bg-[#43CAD9] text-white rounded-md hover:bg-[#40BBD9] flex items-center gap-2"
             >
               <Zap className="w-4 h-4" />
               Gerar Chaves dos Grupos
@@ -61,11 +61,11 @@ export default function Groups() {
             value={newGroupName}
             onChange={(e) => setNewGroupName(e.target.value)}
             onKeyPress={(e) => e.key === 'Enter' && handleCreateGroup()}
-            className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#2DA63F]"
+            className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#40BBD9]"
           />
           <button
             onClick={handleCreateGroup}
-            className="px-4 py-2 bg-[#2DA63F] text-white rounded-md hover:bg-[#41A650] flex items-center gap-2"
+            className="px-4 py-2 bg-[#40BBD9] text-white rounded-md hover:bg-[#43CAD9] flex items-center gap-2"
           >
             <Plus className="w-4 h-4" />
             Criar Grupo

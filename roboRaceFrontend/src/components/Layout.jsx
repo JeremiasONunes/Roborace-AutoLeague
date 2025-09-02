@@ -23,10 +23,10 @@ export default function Layout({ children }) {
   return (
     <div className="min-h-screen bg-[#FAFCFB] flex">
       {/* Sidebar */}
-      <div className={`fixed inset-y-0 left-0 z-50 w-72 bg-[#A7D9AE] border-r border-gray-100 transform ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0 shadow-sm relative`}>
-        <div className="flex items-center justify-between h-20 px-6 border-b border-gray-50">
+      <div className={`fixed inset-y-0 left-0 z-50 w-72 bg-[#40BBD9] border-r border-gray-100 transform ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0 shadow-sm relative`}>
+        <div className="flex items-center justify-between px-6 border-b border-gray-50 py-6 shadow-2xl">
           <div className="flex justify-center w-full">
-            <div className="w-24 h-24">
+            <div className="w-40 h-40">
               <img src="/logo.png" alt="Roborace Univas" className="w-full h-full object-contain" />
             </div>
           </div>
@@ -50,8 +50,8 @@ export default function Layout({ children }) {
                   onClick={() => setSidebarOpen(false)}
                   className={`flex items-center px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${
                     isActive
-                      ? 'bg-[#2DA63F] text-white shadow-sm'
-                      : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                      ? 'bg-[#43CAD9] text-white shadow-sm'
+                      : 'text-white hover:bg-white/20 hover:text-white'
                   }`}
                 >
                   <Icon className="w-4 h-4 mr-3" />
@@ -64,14 +64,14 @@ export default function Layout({ children }) {
           <div className="mt-8 pt-6 border-t border-gray-100">
             <button
               onClick={openPublicView}
-              className="flex items-center w-full px-3 py-2.5 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-all duration-200"
+              className="flex items-center w-full px-3 py-2.5 rounded-xl text-sm font-medium text-white hover:bg-white/20 hover:text-white transition-all duration-200"
             >
               <Eye className="w-4 h-4 mr-3" />
               Visualização Pública
             </button>
             <button
               onClick={logout}
-              className="flex items-center w-full px-3 py-2.5 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-all duration-200 mt-1"
+              className="flex items-center w-full px-3 py-2.5 rounded-xl text-sm font-medium text-white hover:bg-white/20 hover:text-white transition-all duration-200 mt-1"
             >
               <LogOut className="w-4 h-4 mr-3" />
               Sair
@@ -80,9 +80,9 @@ export default function Layout({ children }) {
           
           {/* Créditos */}
           <div className="absolute bottom-4 left-4 right-4">
-            <div className="text-center text-xs text-gray-500">
+            <div className="text-center text-xs text-white/70">
               <p className="font-medium">Desenvolvido por</p>
-              <p className="font-semibold text-gray-600">Jeremias O Nunes</p>
+              <p className="font-semibold text-white/90">Jeremias O Nunes</p>
             </div>
           </div>
         </nav>

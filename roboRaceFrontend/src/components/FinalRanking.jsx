@@ -19,21 +19,18 @@ export default function FinalRanking() {
   let finalRanking = [];
 
   if (currentPhase === 'final' && finalMatch && thirdPlaceMatch) {
-    // Classificação final completa
+    // Classificação final completa - apenas top 3
     finalRanking = [
       { position: 1, team: finalMatch.winner, status: 'Campeão' },
       { position: 2, team: finalMatch.winner?.id === finalMatch.team1.id ? finalMatch.team2 : finalMatch.team1, status: 'Vice-Campeão' },
-      { position: 3, team: thirdPlaceMatch.winner, status: '3º Lugar' },
-      { position: 4, team: thirdPlaceMatch.winner?.id === thirdPlaceMatch.team1.id ? thirdPlaceMatch.team2 : thirdPlaceMatch.team1, status: '4º Lugar' }
+      { position: 3, team: thirdPlaceMatch.winner, status: '3º Lugar' }
     ];
   } else if (currentPhase === 'semifinals' && semifinalMatches.length === 2) {
-    // Classificados para a final
+    // Classificados para a final - apenas finalistas
     const winners = semifinalMatches.map(m => m.winner).filter(Boolean);
-    const losers = semifinalMatches.map(m => m.winner?.id === m.team1.id ? m.team2 : m.team1).filter(Boolean);
     
     finalRanking = [
-      ...winners.map((team, index) => ({ position: index + 1, team, status: 'Classificado para Final' })),
-      ...losers.map((team, index) => ({ position: index + 3, team, status: 'Disputa 3º Lugar' }))
+      ...winners.map((team, index) => ({ position: index + 1, team, status: 'Classificado para Final' }))
     ];
   }
 
@@ -44,9 +41,9 @@ export default function FinalRanking() {
       case 1:
         return <Trophy className="w-6 h-6 text-yellow-500" />;
       case 2:
-        return <Medal className="w-6 h-6 text-gray-400" />;
+        return <Medal className="w-6 h-6 text-gray-600" />;
       case 3:
-        return <Award className="w-6 h-6 text-amber-600" />;
+        return <Award className="w-6 h-6 text-orange-600" />;
       default:
         return <span className="w-6 h-6 flex items-center justify-center text-lg font-bold text-gray-500">{position}</span>;
     }
@@ -57,9 +54,9 @@ export default function FinalRanking() {
       case 1:
         return 'bg-gradient-to-r from-yellow-50 to-yellow-100 border-yellow-200';
       case 2:
-        return 'bg-gradient-to-r from-gray-50 to-gray-100 border-gray-200';
+        return 'bg-gradient-to-r from-gray-100 to-gray-200 border-gray-500';
       case 3:
-        return 'bg-gradient-to-r from-amber-50 to-amber-100 border-amber-200';
+        return 'bg-gradient-to-r from-orange-50 to-orange-100 border-orange-400';
       default:
         return 'bg-white border-gray-200';
     }

@@ -69,31 +69,31 @@ export default function Admin() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
         <div className="bg-white rounded-lg shadow p-6">
           <h3 className="text-lg font-semibold mb-2">Equipes</h3>
-          <p className="text-3xl font-bold text-blue-600">{teams.length}</p>
+          <p className="text-3xl font-bold text-[#40BBD9]">{teams.length}</p>
           <p className="text-sm text-gray-500">Total cadastradas</p>
         </div>
         
         <div className="bg-white rounded-lg shadow p-6">
           <h3 className="text-lg font-semibold mb-2">Grupos</h3>
-          <p className="text-3xl font-bold text-green-600">{groups.length}</p>
+          <p className="text-3xl font-bold text-[#43CAD9]">{groups.length}</p>
           <p className="text-sm text-gray-500">Total criados</p>
         </div>
         
         <div className="bg-white rounded-lg shadow p-6">
           <h3 className="text-lg font-semibold mb-2">Partidas</h3>
-          <p className="text-3xl font-bold text-purple-600">{matches.length}</p>
+          <p className="text-3xl font-bold text-[#40BBD9]">{matches.length}</p>
           <p className="text-sm text-gray-500">Total criadas</p>
         </div>
         
         <div className="bg-white rounded-lg shadow p-6">
           <h3 className="text-lg font-semibold mb-2">Finalizadas</h3>
-          <p className="text-3xl font-bold text-orange-600">{matches.filter(m => m.status === 'completed').length}</p>
+          <p className="text-3xl font-bold text-[#43CAD9]">{matches.filter(m => m.status === 'completed').length}</p>
           <p className="text-sm text-gray-500">Partidas concluídas</p>
         </div>
         
         <div className="bg-white rounded-lg shadow p-6">
           <h3 className="text-lg font-semibold mb-2">Fase Atual</h3>
-          <p className="text-2xl font-bold text-purple-600">{phases[currentPhase].name}</p>
+          <p className="text-2xl font-bold text-[#40BBD9]">{phases[currentPhase].name}</p>
           <p className="text-sm text-gray-500">{phases[currentPhase].completed ? 'Concluída' : 'Em andamento'}</p>
         </div>
       </div>

@@ -10,9 +10,9 @@ export default function Ranking() {
       case 1:
         return <Trophy className="w-5 h-5 text-yellow-500" />;
       case 2:
-        return <Medal className="w-5 h-5 text-gray-400" />;
+        return <Medal className="w-5 h-5 text-gray-600" />;
       case 3:
-        return <Award className="w-5 h-5 text-amber-600" />;
+        return <Award className="w-5 h-5 text-orange-600" />;
       default:
         return <span className="w-5 h-5 flex items-center justify-center text-sm font-bold text-gray-500">{position}</span>;
     }
@@ -23,9 +23,9 @@ export default function Ranking() {
       case 1:
         return 'bg-gradient-to-r from-yellow-50 to-yellow-100 border-yellow-200';
       case 2:
-        return 'bg-gradient-to-r from-gray-50 to-gray-100 border-gray-200';
+        return 'bg-gradient-to-r from-gray-100 to-gray-200 border-gray-500';
       case 3:
-        return 'bg-gradient-to-r from-amber-50 to-amber-100 border-amber-200';
+        return 'bg-gradient-to-r from-orange-50 to-orange-100 border-orange-400';
       default:
         return 'bg-white border-gray-200';
     }
@@ -98,17 +98,17 @@ export default function Ranking() {
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <span className="px-2 py-1 text-xs font-medium bg-[#A7D9AE] text-[#2DA63F] rounded-full">
+                        <span className="px-2 py-1 text-xs font-medium bg-blue-100 text-blue-700 rounded-full">
                           {ranking.group}
                         </span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-center">
-                        <span className="text-lg font-bold text-[#2DA63F]">
+                        <span className="text-lg font-bold text-blue-600">
                           {ranking.points}
                         </span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-center">
-                        <span className="text-sm font-medium text-[#41A650]">
+                        <span className="text-sm font-medium text-green-600">
                           {ranking.wins}
                         </span>
                       </td>
@@ -141,7 +141,7 @@ export default function Ranking() {
 
             <div className="bg-white rounded-lg shadow p-6">
               <div className="flex items-center gap-3 mb-2">
-                <Award className="w-6 h-6 text-[#2DA63F]" />
+                <Award className="w-6 h-6 text-[#40BBD9]" />
                 <h3 className="text-lg font-semibold">Total de Partidas</h3>
               </div>
               <p className="text-2xl font-bold text-gray-900">{totalMatches}</p>
@@ -150,14 +150,14 @@ export default function Ranking() {
 
             <div className="bg-white rounded-lg shadow p-6">
               <div className="flex items-center gap-3 mb-2">
-                <Medal className="w-6 h-6 text-[#41A650]" />
+                <Medal className="w-6 h-6 text-[#43CAD9]" />
                 <h3 className="text-lg font-semibold">Sistema de Pontos</h3>
               </div>
               <div className="text-sm space-y-1">
                 <div className="font-medium text-gray-700 mb-1">Fase de Grupos:</div>
-                <div>Vitória: <span className="font-semibold text-[#2DA63F]">3 pontos</span></div>
-                <div>Empate: <span className="font-semibold text-[#75BF80]">1 ponto</span></div>
-                <div>Derrota: <span className="font-semibold">0 pontos</span></div>
+                <div>Vitória: <span className="font-semibold text-green-600">3 pontos</span></div>
+                <div>Empate: <span className="font-semibold text-blue-600">1 ponto</span></div>
+                <div>Derrota: <span className="font-semibold text-red-600">0 pontos</span></div>
                 <div className="font-medium text-gray-700 mt-2 mb-1">Eliminatórias:</div>
                 <div className="text-xs text-gray-600">Ganhou = Classificou</div>
               </div>

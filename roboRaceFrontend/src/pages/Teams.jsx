@@ -33,11 +33,11 @@ export default function Teams() {
             value={newTeamName}
             onChange={(e) => setNewTeamName(e.target.value)}
             onKeyPress={(e) => e.key === 'Enter' && handleAddTeam()}
-            className="flex-1 px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#2DA63F]/20 focus:border-[#2DA63F] transition-all duration-200 bg-gray-50/50"
+            className="flex-1 px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#40BBD9]/20 focus:border-[#40BBD9] transition-all duration-200 bg-gray-50/50"
           />
           <button
             onClick={handleAddTeam}
-            className="px-5 py-3 bg-[#2DA63F] text-white rounded-xl hover:bg-[#41A650] flex items-center gap-2 transition-all duration-200 font-medium shadow-sm"
+            className="px-5 py-3 bg-[#40BBD9] text-white rounded-xl hover:bg-[#43CAD9] flex items-center gap-2 transition-all duration-200 font-medium shadow-sm"
           >
             <Plus className="w-4 h-4" />
             Adicionar
