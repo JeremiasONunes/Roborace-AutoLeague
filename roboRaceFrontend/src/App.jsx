@@ -9,7 +9,6 @@ import Matches from './pages/Matches';
 import Ranking from './pages/Ranking';
 
 import Admin from './pages/Admin';
-import Public from './pages/Public';
 import PublicView from './pages/PublicView';
 
 function AppContent() {
@@ -41,7 +40,6 @@ function AppContent() {
               <Route path="/matches" element={<Matches />} />
               <Route path="/ranking" element={<Ranking />} />
               <Route path="/admin" element={<Admin />} />
-              <Route path="/public" element={<Public />} />
             </Routes>
           </Layout>
         } />

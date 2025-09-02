@@ -83,7 +83,7 @@ export default function Groups() {
                 const distributed = distributeTeamsToGroups();
                 alert(`${distributed} equipes distribuídas igualmente entre ${groups.length} grupos!`);
               }}
-              className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 flex items-center gap-2"
+              className="px-4 py-2 bg-blue-400 text-white rounded-md hover:bg-blue-500 flex items-center gap-2"
             >
               <Shuffle className="w-4 h-4" />
               Distribuir Igualmente

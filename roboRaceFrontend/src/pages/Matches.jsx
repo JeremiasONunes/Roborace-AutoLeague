@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Play, Trophy, Clock, Plus, ChevronRight, CheckCircle, Users } from 'lucide-react';
 import { useData } from '../context/DataContext';
 
@@ -16,6 +16,38 @@ export default function Matches() {
     getQualifiedTeams,
     rankings
   } = useData();
+  
+  // Lógica inteligente de pódio (mesma do PublicView)
+  const displayRankings = useMemo(() => {
+    let podiumRankings = rankings;
+    
+    if (currentPhase !== 'groups') {
+      const finalMatches = matches.filter(m => m.phaseType === 'final' && m.status === 'completed');
+      const semifinalMatches = matches.filter(m => m.phaseType === 'semifinals' && m.status === 'completed');
+      const finalMatch = finalMatches.find(m => m.phase === 'Final');
+      const thirdPlaceMatch = finalMatches.find(m => m.phase === 'Disputa do 3º Lugar');
+      
+      if (currentPhase === 'final' && finalMatch && thirdPlaceMatch) {
+        // Classificação final completa
+        podiumRankings = [
+          { position: 1, team: finalMatch.winner, points: 'Campeão', wins: 0, draws: 0, losses: 0, group: 'Final' },
+          { position: 2, team: finalMatch.winner?.id === finalMatch.team1.id ? finalMatch.team2 : finalMatch.team1, points: 'Vice', wins: 0, draws: 0, losses: 0, group: 'Final' },
+          { position: 3, team: thirdPlaceMatch.winner, points: '3º', wins: 0, draws: 0, losses: 0, group: '3º Lugar' }
+        ];
+      } else if (currentPhase === 'semifinals' && semifinalMatches.length === 2) {
+        // Classificados para a final
+        const winners = semifinalMatches.map(m => m.winner).filter(Boolean);
+        const losers = semifinalMatches.map(m => m.winner?.id === m.team1.id ? m.team2 : m.team1).filter(Boolean);
+        
+        podiumRankings = [
+          ...winners.map((team, index) => ({ position: index + 1, team, points: 'Final', wins: 0, draws: 0, losses: 0, group: 'Finalista' })),
+          ...losers.map((team, index) => ({ position: index + 3, team, points: '3º', wins: 0, draws: 0, losses: 0, group: 'Disputa 3º' }))
+        ];
+      }
+    }
+    
+    return podiumRankings;
+  }, [matches, rankings, currentPhase]);
   const [showAddMatch, setShowAddMatch] = useState(false);
   const [newMatch, setNewMatch] = useState({ team1Id: '', team2Id: '', phase: 'Fase de Grupos' });
 
@@ -206,21 +238,21 @@ export default function Matches() {
       </div>
 
       {/* Pódio Geral */}
-      {rankings.length > 0 && (
+      {displayRankings.length > 0 && (
         <div className="bg-white rounded-lg shadow mb-6">
           <div className="px-6 py-4 border-b border-gray-200">
             <h2 className="text-lg font-semibold">Pódio Geral</h2>
           </div>
           <div className="p-6">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {rankings.slice(0, 3).map((team, index) => (
+              {displayRankings.slice(0, 3).map((team) => (
                 <div key={team.team.id} className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
                   <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white font-bold ${
-                    index === 0 ? 'bg-yellow-500' :
-                    index === 1 ? 'bg-gray-400' :
-                    index === 2 ? 'bg-amber-600' : 'bg-[#40BBD9]'
+                    team.position === 1 ? 'bg-yellow-500' :
+                    team.position === 2 ? 'bg-gray-600' :
+                    team.position === 3 ? 'bg-orange-600' : 'bg-[#40BBD9]'
                   }`}>
-                    {index + 1}
+                    {team.position}
                   </div>
                   <div>
                     <div className="font-medium">{team.team.name}</div>

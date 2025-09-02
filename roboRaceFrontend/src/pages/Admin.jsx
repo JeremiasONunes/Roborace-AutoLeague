@@ -1,7 +1,6 @@
 import { Trash2, Download, Upload, AlertTriangle } from 'lucide-react';
 import { useData } from '../context/DataContext';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import StorageInfo from '../components/StorageInfo';
 
 export default function Admin() {
@@ -9,7 +8,7 @@ export default function Admin() {
     teams,
     groups, 
     matches,
-    rankings,
+    _rankings,
     currentPhase,
     phases,
     clearAllData,
@@ -19,7 +18,6 @@ export default function Admin() {
     exportData
   } = useData();
   const [showConfirm, setShowConfirm] = useState(false);
-  const navigate = useNavigate();
 
   const handleClearData = () => {
     clearAllData();
@@ -52,7 +50,7 @@ export default function Admin() {
           } else {
             alert('Erro ao importar dados. Verifique se o arquivo está no formato correto.');
           }
-        } catch (error) {
+        } catch {
           alert('Erro ao ler o arquivo. Verifique se é um arquivo JSON válido.');
         }
       };
@@ -100,9 +98,9 @@ export default function Admin() {
 
       {/* Controle de Fases */}
       {isCurrentPhaseComplete() && currentPhase !== 'final' && (
-        <div className="bg-green-50 border border-green-200 rounded-lg p-6">
-          <h2 className="text-lg font-semibold mb-4 text-green-800">Avançar Fase</h2>
-          <p className="text-green-700 mb-4">
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
+          <h2 className="text-lg font-semibold mb-4 text-blue-800">Avançar Fase</h2>
+          <p className="text-blue-700 mb-4">
             A fase {phases[currentPhase].name} foi concluída. Você pode avançar para a próxima fase.
           </p>
           <button
@@ -111,7 +109,7 @@ export default function Admin() {
                 advanceToNextPhase();
               }
             }}
-            className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
           >
             Avançar para Próxima Fase
           </button>
@@ -130,8 +128,8 @@ export default function Admin() {
             <Download className="w-4 h-4" />
             Exportar Dados
           </button>
-          
-          <label className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 flex items-center gap-2 cursor-pointer">
+
+          <label className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 flex items-center gap-2 cursor-pointer">
             <Upload className="w-4 h-4" />
             Importar Dados
             <input

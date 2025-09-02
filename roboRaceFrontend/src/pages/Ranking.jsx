@@ -14,7 +14,7 @@ export default function Ranking() {
       case 3:
         return <Award className="w-5 h-5 text-orange-600" />;
       default:
-        return <span className="w-5 h-5 flex items-center justify-center text-sm font-bold text-gray-500">{position}</span>;
+        return <span className="w-5 h-5 flex items-center justify-center text-sm font-bold text-gray-500">{position}º</span>;
     }
   };
 
@@ -85,11 +85,8 @@ export default function Ranking() {
                   {rankings.map((ranking) => (
                     <tr key={ranking.team.id} className={`${getPositionBg(ranking.position)} border-l-4`}>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="flex items-center gap-3">
+                        <div className="flex items-center justify-center">
                           {getPositionIcon(ranking.position)}
-                          <span className="text-sm font-medium text-gray-900">
-                            {ranking.position}º
-                          </span>
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
