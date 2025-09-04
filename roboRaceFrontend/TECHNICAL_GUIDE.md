@@ -18,6 +18,7 @@ App
 │                   ├── Groups
 │                   ├── Matches
 │                   ├── Ranking
+│                   ├── Phases
 │                   └── Admin
 ```
 
@@ -50,9 +51,9 @@ App
   team2: Team,          // Segunda equipe
   status: 'pending' | 'completed',
   winner: Team | null,  // Equipe vencedora
-  draw: boolean,        // Se foi empate
+  draw: boolean,        // Se foi empate (apenas fase de grupos)
   phase: string,        // Nome da fase
-  phaseType: string,    // Tipo da fase (groups, round16, etc.)
+  phaseType: string,    // Tipo da fase (groups, semifinals, final)
   createdAt: string,    // ISO timestamp
   completedAt?: string  // ISO timestamp quando finalizada
 }
@@ -168,18 +169,18 @@ const calculateRankings = (currentData) => {
     };
   });
   
-  // 2. Processar partidas concluídas
+  // 2. Processar APENAS partidas da fase de grupos
   currentData.matches
-    .filter(match => match.status === 'completed')
+    .filter(match => match.status === 'completed' && match.phaseType === 'groups')
     .forEach(match => {
       if (match.draw) {
-        // Empate: 1 ponto para cada
+        // Empate: 1 ponto para cada (apenas grupos)
         teamStats[match.team1.id].points += 1;
         teamStats[match.team2.id].points += 1;
         teamStats[match.team1.id].draws += 1;
         teamStats[match.team2.id].draws += 1;
       } else {
-        // Vitória: 3 pontos para vencedor
+        // Vitória: 3 pontos para vencedor (apenas grupos)
         const winnerId = match.winner.id;
         const loserId = winnerId === match.team1.id ? match.team2.id : match.team1.id;
         
@@ -189,7 +190,20 @@ const calculateRankings = (currentData) => {
       }
     });
   
-  // 3. Ordenar por critérios
+  // 3. Contar vitórias/derrotas de TODAS as fases
+  currentData.matches
+    .filter(match => match.status === 'completed' && match.phaseType !== 'groups')
+    .forEach(match => {
+      if (!match.draw && match.winner) {
+        const winnerId = match.winner.id;
+        const loserId = winnerId === match.team1.id ? match.team2.id : match.team1.id;
+        
+        teamStats[winnerId].wins += 1;
+        teamStats[loserId].losses += 1;
+      }
+    });
+  
+  // 4. Ordenar por critérios (pontos apenas da fase de grupos)
   return Object.values(teamStats)
     .sort((a, b) => {
       if (b.points !== a.points) return b.points - a.points;     // Pontos
@@ -216,8 +230,11 @@ const generateGroupBrackets = () => {
             team1: group.teams[i],
             team2: group.teams[j],
             status: 'pending',
+            winner: null,
+            draw: false,
             phase: group.name,
-            phaseType: 'groups'
+            phaseType: 'groups',
+            createdAt: new Date().toISOString()
           });
         }
       }
@@ -228,25 +245,56 @@ const generateGroupBrackets = () => {
 };
 ```
 
+### Sistema de Fases Simplificado
+```javascript
+const PHASES = {
+  GROUPS: 'groups',
+  SEMIFINALS: 'semifinals', 
+  FINAL: 'final'
+};
+
+// Classificação automática para semifinais
+const getQualifiedTeams = () => {
+  const qualified = [];
+  
+  data.groups.forEach(group => {
+    const groupRanking = calculateRankings(data)
+      .filter(r => group.teams.some(t => t.id === r.team.id))
+      .slice(0, 2); // Top 2 de cada grupo
+    
+    qualified.push(...groupRanking.map(r => r.team));
+  });
+  
+  return qualified;
+};
+```
+
 **Acesso:** Disponível na página de grupos (`/groups`) e no painel administrativo (`/admin`)
 
 ## 🎨 Sistema de Estilos
 
 ### Convenções TailwindCSS
 ```javascript
-// Cores do sistema
+// Cores do sistema (Esquema Azul)
 const colors = {
-  primary: '#2DA63F',      // bg-[#2DA63F]
-  secondary: '#A7D9AE',    // bg-[#A7D9AE]
-  success: '#41A650',      // bg-[#41A650]
-  background: '#FAFCFB'    // bg-[#FAFCFB]
+  primary: '#40BBD9',      // bg-[#40BBD9]
+  secondary: '#43CAD9',    // bg-[#43CAD9]
+  accent: '#3B82F6',       // bg-blue-500
+  background: '#F8FAFC'    // bg-slate-50
 };
 
 // Classes padrão para componentes
 const buttonClasses = {
-  primary: 'px-4 py-2 bg-[#2DA63F] text-white rounded-md hover:bg-[#41A650]',
+  primary: 'px-4 py-2 bg-[#40BBD9] text-white rounded-md hover:bg-[#43CAD9]',
   secondary: 'px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700',
   danger: 'px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700'
+};
+
+// Cores do pódio
+const podiumColors = {
+  first: 'bg-yellow-500',   // Dourado
+  second: 'bg-gray-600',    // Cinza escuro
+  third: 'bg-orange-500'    // Laranja
 };
 ```
 
@@ -350,6 +398,34 @@ npm run build
 npx vite-bundle-analyzer dist
 ```
 
+## 🎯 Regras de Negócio Implementadas
+
+### Sistema de Pontuação Dual
+```javascript
+// Fase de Grupos: Sistema de pontos (3-1-0)
+const GROUP_POINTS = {
+  WIN: 3,
+  DRAW: 1,
+  LOSS: 0
+};
+
+// Fases Eliminatórias: Apenas vitória/derrota
+const ELIMINATION_RULES = {
+  allowDraw: false,     // Sem empates
+  pointsSystem: false,  // Sem pontos
+  directAdvancement: true
+};
+```
+
+### Critérios de Classificação
+```javascript
+const RANKING_CRITERIA = [
+  'points',    // 1º: Pontos (apenas grupos)
+  'wins',      // 2º: Vitórias (todas as fases)
+  'losses'     // 3º: Derrotas (menor número)
+];
+```
+
 ## 🧪 Testing Strategy
 
 ### Estrutura de Testes (Recomendada)
@@ -357,11 +433,23 @@ npx vite-bundle-analyzer dist
 src/
 ├── __tests__/
 │   ├── components/
+│   │   ├── FinalRanking.test.js
+│   │   └── Layout.test.js
 │   ├── context/
+│   │   ├── DataContext.test.js
+│   │   └── AuthContext.test.js
 │   ├── hooks/
+│   │   └── useRealTimeData.test.js
 │   └── pages/
+│       ├── Teams.test.js
+│       ├── Groups.test.js
+│       ├── Matches.test.js
+│       ├── Ranking.test.js
+│       └── PublicView.test.js
 ├── __mocks__/
+│   └── localStorage.js
 └── test-utils/
+    └── renderWithProviders.js
 ```
 
 ### Testes de Contexto
@@ -372,6 +460,41 @@ import { DataProvider, useData } from '../context/DataContext';
 
 const wrapper = ({ children }) => (
   <DataProvider>{children}</DataProvider>
+);
+
+test('should calculate rankings correctly', () => {
+  const { result } = renderHook(() => useData(), { wrapper });
+  
+  act(() => {
+    result.current.addTeam({ name: 'Team A' });
+    result.current.addTeam({ name: 'Team B' });
+  });
+  
+  expect(result.current.teams).toHaveLength(2);
+});
+```
+
+## 🚀 Performance e Otimizações
+
+### Memoização Estratégica
+```javascript
+// Rankings calculados apenas quando necessário
+const rankings = useMemo(() => {
+  return calculateRankings(data);
+}, [data.matches, data.teams]);
+
+// Componentes pesados memoizados
+const FinalRanking = memo(({ matches, teams }) => {
+  // Renderização otimizada
+});
+```
+
+### Lazy Loading
+```javascript
+// Carregamento sob demanda
+const PublicView = lazy(() => import('./pages/PublicView'));
+const Admin = lazy(() => import('./pages/Admin'));
+```er>
 );
 
 test('should add team correctly', () => {

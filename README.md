@@ -140,6 +140,8 @@ roborace/
 - **Atualização Automática**: Dados atualizados a cada segundo
 - **Interface Otimizada**: Design focado na visualização de resultados
 - **Informações em Tempo Real**: Ranking, próximas partidas, resultados
+- **Esquema de Cores Azul**: Interface moderna com paleta azul (#40BBD9/#43CAD9)
+- **Créditos Aprimorados**: Seção de desenvolvedor com ícones e melhor visualização
 
 ## ⚙️ Regras de Negócio
 
@@ -153,6 +155,7 @@ roborace/
 #### Fases Eliminatórias (Semifinais e Final)
 - **Ganhou = Classificou** (sem empates, sem pontos)
 - **Classificação**: Vencedor avança, perdedor é eliminado
+- **Pontuação Zerada**: Pontos são zerados imediatamente ao sair da fase de grupos
 
 ### Critérios de Classificação (em ordem de prioridade)
 1. **Pontos totais** (maior número)
@@ -164,7 +167,7 @@ roborace/
 #### Fases Disponíveis
 1. **Fase de Grupos**: Partidas dentro dos grupos criados
 2. **Semifinais**: 4 melhores equipes (2 partidas)
-3. **Final**: 2 melhores equipes + disputa do 3º lugar
+3. **Final**: 2 melhores equipes + disputa do 3º lugar (3º lugar acontece ANTES da final)
 
 #### Evolução entre Fases
 - **Automática**: Sistema detecta quando todas as partidas da fase atual estão concluídas
@@ -221,11 +224,12 @@ roborace/
 
 ### Durante a Competição
 1. **Fase de Grupos**: Definir resultados das partidas dos grupos (com empates permitidos)
-2. **Acompanhar Ranking**: Verificar classificação por grupo
+2. **Acompanhar Ranking**: Verificar classificação por grupo (pontos são zerados ao avançar)
 3. **Avançar para Semifinais**: 2 primeiros de cada grupo se classificam
-4. **Semifinais**: Partidas eliminatórias (sem empate)
-5. **Final**: Vencedores das semifinais + disputa do 3º lugar
-6. **Visualização Pública**: Usar `/view` para exibição ao público
+4. **Semifinais**: Partidas eliminatórias (sem empate, sem pontos)
+5. **Disputa do 3º Lugar**: Acontece ANTES da final
+6. **Final**: Vencedores das semifinais disputam o título
+7. **Visualização Pública**: Usar `/view` para exibição ao público
 
 ### Funcionalidades Avançadas
 1. **Controle de Fases**: Gerenciar progressão da competição em `/phases`
@@ -336,6 +340,22 @@ npm run preview
 - Controle total sobre os dados
 - Sem dependência de terceiros
 
+## 🎨 Design e Interface
+
+### Esquema de Cores
+- **Cor Primária**: #40BBD9 (Azul claro)
+- **Cor Secundária**: #43CAD9 (Azul mais claro)
+- **Pódio**: Dourado (1º), Cinza escuro (2º), Laranja (3º)
+- **Interface**: Moderna, limpa e responsiva
+
+### Melhorias Recentes
+- ✅ Migração completa para esquema azul
+- ✅ Sidebar com melhor espaçamento da logo
+- ✅ Contraste aprimorado em todos os componentes
+- ✅ Pódio com cores distintas e legíveis
+- ✅ Créditos com ícones e layout responsivo
+- ✅ Sistema de pontuação corrigido para eliminatórias
+
 ## 🔮 Evoluções Futuras (Opcionais)
 - PWA para instalação como app
 - Modo escuro
@@ -365,7 +385,9 @@ Este projeto está licenciado sob a Licença MIT - veja o arquivo [LICENSE](LICE
 ## 👨‍💻 Desenvolvedor
 
 **Jeremias O Nunes**  
-*Desenvolvedor Full Stack*
+*Desenvolvedor Full Stack*  
+📞 (35) 9 9850-0813  
+🐙 GitHub: jeremiasoNunes
 
 ---
 

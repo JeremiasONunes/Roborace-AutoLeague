@@ -2,7 +2,7 @@
 
 ## 📋 Visão Geral
 
-O frontend do RoboRace é uma aplicação React moderna construída com Vite, projetada para gerenciar competições de robótica de forma intuitiva e eficiente. A aplicação oferece uma interface administrativa completa e uma visualização pública em tempo real.
+O frontend do RoboRace é uma aplicação React moderna construída com Vite, projetada para gerenciar competições de robótica de forma intuitiva e eficiente. A aplicação oferece uma interface administrativa completa e uma visualização pública em tempo real com sistema de fases simplificado.
 
 ## 🏗️ Arquitetura
 
@@ -18,6 +18,7 @@ O frontend do RoboRace é uma aplicação React moderna construída com Vite, pr
 src/
 ├── components/          # Componentes reutilizáveis
 │   ├── Layout.jsx      # Layout principal com sidebar
+│   ├── FinalRanking.jsx # Ranking de mata-mata
 │   └── ProtectedRoute.jsx # Proteção de rotas
 ├── context/            # Contextos React
 │   ├── AuthContext.jsx # Gerenciamento de autenticação
@@ -29,7 +30,7 @@ src/
 │   ├── Groups.jsx      # Gerenciamento de grupos
 │   ├── Login.jsx       # Página de login
 │   ├── Matches.jsx     # Gerenciamento de partidas
-│   ├── Public.jsx      # Página pública (não utilizada)
+│   ├── Phases.jsx      # Controle de fases
 │   ├── PublicView.jsx  # Visualização pública principal
 │   ├── Ranking.jsx     # Ranking das equipes
 │   └── Teams.jsx       # Gerenciamento de equipes
@@ -73,8 +74,8 @@ Contexto principal que gerencia todos os dados da aplicação com persistência 
   teams: Array<Team>,           // Equipes cadastradas
   groups: Array<Group>,         // Grupos criados
   matches: Array<Match>,        // Partidas
-  rankings: Array<Ranking>,     // Rankings calculados
-  currentPhase: string,         // Fase atual da competição
+  rankings: Array<Ranking>,     // Rankings calculados (apenas grupos)
+  currentPhase: string,         // Fase atual: 'groups', 'semifinals', 'final'
   phases: Object               // Configuração das fases
 }
 ```
@@ -95,6 +96,10 @@ Contexto principal que gerencia todos os dados da aplicação com persistência 
 - `addMatch(match)`: Cria nova partida
 - `updateMatchResult(matchId, winner, isDraw)`: Define resultado
 - `resetMatch(matchId)`: Reseta resultado
+
+#### Fases
+- `advanceToNextPhase()`: Avança para próxima fase automaticamente
+- `getQualifiedTeams()`: Retorna top 2 de cada grupo
 
 #### Utilitários
 - `generateRandomBrackets()`: Gera chaves aleatórias
@@ -137,7 +142,17 @@ Componente principal que fornece a estrutura base da aplicação administrativa.
 - `/groups` - Organização em Grupos
 - `/matches` - Controle de Partidas
 - `/ranking` - Visualização de Rankings
-- `/admin` - Painel Administrativo (inclui geração de chaves)
+- `/phases` - Controle de Fases
+- `/admin` - Painel Administrativo
+
+### FinalRanking (`components/FinalRanking.jsx`)
+
+Componente especializado para exibir ranking de fases eliminatórias.
+
+**Funcionalidades:**
+- Determina posições baseadas nos resultados das partidas
+- Identifica campeão, vice, 3º e 4º lugares
+- Exibe apenas equipes que participaram do mata-mata
 
 ### ProtectedRoute (`components/ProtectedRoute.jsx`)
 
@@ -152,6 +167,7 @@ Componente para proteção de rotas que requer autenticação.
 - Listagem com busca
 - Remoção de equipes
 - Validação de nomes únicos
+- Interface com esquema azul
 
 **Interface:**
 - Formulário de cadastro
@@ -165,6 +181,7 @@ Componente para proteção de rotas que requer autenticação.
 - Adição/remoção de equipes
 - Validação de exclusividade (uma equipe por grupo)
 - Geração de partidas por grupo
+- Interface com cores azuis
 
 **Interface:**
 - Formulário de criação de grupos
@@ -176,29 +193,39 @@ Componente para proteção de rotas que requer autenticação.
 
 **Funcionalidades:**
 - Criação manual de partidas
-- Definição de resultados (vitória/empate)
+- Definição de resultados (vitória/empate apenas em grupos)
 - Reset de resultados
 - Filtros por status e fase
-- Visualização por fases da competição
+- Botão empate condicional (apenas grupos)
 
 **Interface:**
 - Formulário de criação de partidas
 - Lista de partidas com status
-- Botões de ação para resultados
+- Botões de ação condicionais por fase
 - Indicadores visuais de status
 
 ### Ranking (`pages/Ranking.jsx`)
 
 **Funcionalidades:**
-- Visualização do ranking atualizado
+- Visualização do ranking de grupos
+- Ranking de mata-mata (FinalRanking)
 - Critérios de desempate automáticos
 - Agrupamento por grupos
-- Destaque para pódio
+- Destaque para pódio com cores específicas
 
 **Critérios de Classificação:**
-1. Pontos (3 vitória, 1 empate, 0 derrota)
-2. Número de vitórias
-3. Menor número de derrotas
+1. Pontos (apenas fase de grupos: 3 vitória, 1 empate, 0 derrota)
+2. Número de vitórias (todas as fases)
+3. Menor número de derrotas (todas as fases)
+
+### Phases (`pages/Phases.jsx`)
+
+**Funcionalidades:**
+- Timeline visual das fases
+- Controle de progressão automática
+- Classificação automática (top 2 por grupo)
+- Geração de partidas eliminatórias
+- Visualização do progresso da competição
 
 ### Admin (`pages/Admin.jsx`)
 
@@ -208,6 +235,7 @@ Componente para proteção de rotas que requer autenticação.
 - Geração automática de chaves
 - Backup e restauração de dados
 - Reset completo do sistema
+- Interface com estatísticas azuis
 
 **Seções:**
 - Estatísticas gerais
@@ -222,22 +250,28 @@ Componente para proteção de rotas que requer autenticação.
 - Visualização pública sem autenticação
 - Atualização automática em tempo real
 - Timeline de fases da competição
-- Ranking ao vivo
+- Ranking ao vivo (grupos + mata-mata)
 - Próximas partidas e resultados recentes
+- Logo ampliada e gradiente azul
 
 **Interface:**
-- Header com logo e fase atual
+- Header com logo grande e fase atual
 - Timeline visual das fases
 - Grid responsivo com informações
-- Footer com créditos
+- Footer com créditos aprimorados
 
 ## 🎨 Sistema de Design
 
-### Paleta de Cores
-- **Primary**: `#2DA63F` (Verde principal)
-- **Secondary**: `#A7D9AE` (Verde claro)
-- **Success**: `#41A650` (Verde escuro)
-- **Background**: `#FAFCFB` (Cinza muito claro)
+### Paleta de Cores (Esquema Azul)
+- **Primary**: `#40BBD9` (Azul principal)
+- **Secondary**: `#43CAD9` (Azul claro)
+- **Accent**: `#3B82F6` (Azul padrão)
+- **Background**: `#F8FAFC` (Cinza muito claro)
+
+### Cores do Pódio
+- **1º Lugar**: `bg-yellow-500` (Dourado)
+- **2º Lugar**: `bg-gray-600` (Cinza escuro)
+- **3º Lugar**: `bg-orange-500` (Laranja)
 
 ### Componentes de UI
 - Cards com `rounded-lg` e `shadow`
@@ -251,6 +285,31 @@ Componente para proteção de rotas que requer autenticação.
 - Breakpoints do TailwindCSS
 - Sidebar colapsável em mobile
 - Grid responsivo para dados
+
+## ⚙️ Sistema de Fases Simplificado
+
+### Fases Disponíveis
+1. **Grupos** (`groups`): Partidas dentro dos grupos
+2. **Semifinais** (`semifinals`): 4 melhores equipes
+3. **Final** (`final`): Disputa do título + 3º lugar
+
+### Regras de Pontuação Dual
+
+#### Fase de Grupos
+- **Vitória**: 3 pontos
+- **Empate**: 1 ponto (permitido)
+- **Derrota**: 0 pontos
+
+#### Fases Eliminatórias
+- **Vitória**: Classificação (sem pontos)
+- **Derrota**: Eliminação (sem pontos)
+- **Empate**: Não permitido
+
+### Progressão Automática
+- Sistema detecta quando todas as partidas da fase estão concluídas
+- Top 2 de cada grupo se classificam para semifinais
+- Partidas eliminatórias são geradas automaticamente
+- Pontos são zerados ao sair da fase de grupos
 
 ## 🔄 Fluxo de Dados
 
@@ -309,6 +368,7 @@ export default defineConfig({
 - Menu hambúrguer
 - Touch-friendly buttons
 - Grid adaptativo
+- Logo ampliada na visualização pública
 
 ### Performance
 - Lazy loading de componentes
@@ -358,24 +418,26 @@ npm run build
 - Compressão gzip recomendada
 - Cache headers para assets
 
-## 📈 Melhorias Futuras
+## 📈 Melhorias Implementadas
+
+### Sistema Atual
+- ✅ Fases simplificadas (Grupos → Semifinais → Final)
+- ✅ Sistema de pontuação dual
+- ✅ Esquema de cores azul completo
+- ✅ Componente FinalRanking para mata-mata
+- ✅ Botão empate condicional
+- ✅ Logo ampliada na visualização pública
+- ✅ Progressão automática entre fases
 
 ### Performance
 - Code splitting por rotas
-- Service Workers para cache
-- Otimização de imagens
+- Memoização estratégica
+- Otimização de re-renders
 
 ### Funcionalidades
-- Modo escuro
-- Internacionalização (i18n)
-- PWA capabilities
-- WebSocket para tempo real
-
-### UX/UI
-- Animações e transições
-- Skeleton loading
-- Toast notifications
-- Drag and drop
+- Sistema de backup robusto
+- Atualização em tempo real
+- Interface responsiva completa
 
 ## 📞 Suporte
 
@@ -389,8 +451,10 @@ npm run build
 2. **Login não funciona**: Verificar credenciais
 3. **Importação falha**: Validar formato JSON
 4. **Ranking incorreto**: Verificar partidas concluídas
+5. **Empate não aparece**: Verificar se está na fase de grupos
 
 ---
 
 **Desenvolvido por Jeremias O Nunes**  
-*Sistema completo para competições de robótica*
+*Sistema completo para competições de robótica*  
+📞 (35) 9 9850-0813 | 🐙 GitHub: jeremiasoNunes
