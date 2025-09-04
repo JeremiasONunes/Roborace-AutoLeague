@@ -1,4 +1,4 @@
-import { Trophy, Calendar, Users, Clock, Eye, Zap, ChevronRight, CheckCircle, Play, Medal, Award } from 'lucide-react';
+import { Trophy, Calendar, Users, Clock, Eye, Zap, ChevronRight, CheckCircle, Play, Medal, Award, User, Phone, Github } from 'lucide-react';
 import { useRealTimeData } from '../hooks/useRealTimeData';
 import { useMemo } from 'react';
 
@@ -47,10 +47,10 @@ export default function PublicView() {
   }, [matches, rankings, currentPhase]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#B3E5FC] via-[#81D4FA] to-[#4FC3F7] relative overflow-x-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-[#B3E5FC] via-[#81D4FA] to-[#4FC3F7] relative">
       
 
-      <main className="max-w-7xl mx-auto py-4 px-6">
+      <main className="max-w-7xl mx-auto py-4 px-6 ">
         <div className="space-y-4">
           <div className="bg-gradient-to-r from-[#40BBD9] to-[#43CAD9] rounded-xl p-2 text-white shadow-xl">
             <div className="flex items-center justify-between">
@@ -241,9 +241,20 @@ export default function PublicView() {
       {/* Créditos */}
       <footer className="bg-white border-t border-gray-100 py-4">
         <div className="max-w-7xl mx-auto px-6 text-center">
-          <p className="text-sm text-gray-500">
-            Desenvolvido por <span className="font-semibold text-gray-700">Jeremias O Nunes</span>
-          </p>
+          <div className="flex items-center justify-center gap-6 text-sm text-gray-500">
+            <div className="flex items-center gap-2 text-black text-2xl">
+              <User className="w-8 h-8" />
+              <span>Desenvolvido por <span className="font-semibold text-gray-700">Jeremias O Nunes</span></span>
+            </div>
+            <div className="flex items-center gap-2 text-black text-2xl">
+              <Phone className="w-8 h-8" />
+              <span className="font-medium">(35) 9 9850-0813</span>
+            </div>
+            <div className="flex items-center gap-2 text-black text-2xl">
+              <Github className="w-8 h-8" />
+              <span className="font-medium">jeremiasoNunes</span>
+            </div>
+          </div>
         </div>
       </footer>
     </div>

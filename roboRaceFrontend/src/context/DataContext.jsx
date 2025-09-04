@@ -236,32 +236,30 @@ export const DataProvider = ({ children }) => {
     });
 
     // Calcular estatísticas baseado apenas nas partidas da fase de grupos
-    // Se já chegou na semifinal, não atualizar mais os pontos
-    if (currentData.currentPhase === 'groups') {
-      currentData.matches
-        .filter(match => match.status === 'completed' && match.phaseType === 'groups')
-        .forEach(match => {
-      const team1Stats = teamStats[match.team1.id];
-      const team2Stats = teamStats[match.team2.id];
+    // Pontos só são contabilizados na fase de grupos
+    currentData.matches
+      .filter(match => match.status === 'completed' && match.phaseType === 'groups')
+      .forEach(match => {
+        const team1Stats = teamStats[match.team1.id];
+        const team2Stats = teamStats[match.team2.id];
 
-      if (!team1Stats || !team2Stats) return;
+        if (!team1Stats || !team2Stats) return;
 
-      if (match.draw) {
-        team1Stats.points += 1;
-        team2Stats.points += 1;
-        team1Stats.draws += 1;
-        team2Stats.draws += 1;
-      } else if (match.winner.id == match.team1.id) {
-        team1Stats.points += 3;
-        team1Stats.wins += 1;
-        team2Stats.losses += 1;
-      } else {
-        team2Stats.points += 3;
-        team2Stats.wins += 1;
-        team1Stats.losses += 1;
+        if (match.draw) {
+          team1Stats.points += 1;
+          team2Stats.points += 1;
+          team1Stats.draws += 1;
+          team2Stats.draws += 1;
+        } else if (match.winner.id == match.team1.id) {
+          team1Stats.points += 3;
+          team1Stats.wins += 1;
+          team2Stats.losses += 1;
+        } else {
+          team2Stats.points += 3;
+          team2Stats.wins += 1;
+          team1Stats.losses += 1;
         }
       });
-    }
 
     // Converter para array e ordenar
     return Object.values(teamStats)
@@ -495,22 +493,7 @@ export const DataProvider = ({ children }) => {
       const winners = semifinalMatches.map(m => m.winner).filter(Boolean);
       const losers = semifinalMatches.map(m => m.winner?.id === m.team1.id ? m.team2 : m.team1).filter(Boolean);
       
-      // Criar final
-      if (winners.length >= 2) {
-        matches.push({
-          id: matchId++,
-          team1: winners[0],
-          team2: winners[1],
-          status: 'pending',
-          winner: null,
-          draw: false,
-          phase: 'Final',
-          phaseType: 'final',
-          createdAt: new Date().toISOString()
-        });
-      }
-      
-      // Criar disputa do 3º lugar
+      // Criar disputa do 3º lugar PRIMEIRO (para aparecer antes da final)
       if (losers.length >= 2) {
         matches.push({
           id: matchId++,
@@ -520,6 +503,21 @@ export const DataProvider = ({ children }) => {
           winner: null,
           draw: false,
           phase: 'Disputa do 3º Lugar',
+          phaseType: 'final',
+          createdAt: new Date(Date.now() - 1000).toISOString() // 1 segundo antes para garantir ordem
+        });
+      }
+      
+      // Criar final DEPOIS
+      if (winners.length >= 2) {
+        matches.push({
+          id: matchId++,
+          team1: winners[0],
+          team2: winners[1],
+          status: 'pending',
+          winner: null,
+          draw: false,
+          phase: 'Final',
           phaseType: 'final',
           createdAt: new Date().toISOString()
         });
