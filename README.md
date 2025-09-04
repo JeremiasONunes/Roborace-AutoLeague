@@ -395,7 +395,7 @@ Este projeto está licenciado sob a Licença MIT - veja o arquivo [LICENSE](LICE
 
 **“Simples, Rápido e Funciona!”**
 
-O RoboRace foi criado para ser a solução mais **simples e direta** para gerenciar competições de robótica. Sem complicações, sem servidores, sem custos - apenas **instale e use**!
+O RoboRace-AutoLegue foi criado para ser a solução mais **simples e direta** para gerenciar competições de robótica. Sem complicações, sem servidores, sem custos - apenas **instale e use**!
 
 Perfeito para educadores, organizadores de eventos e entusiastas da robótica que precisam de uma ferramenta **confiável e instantânea**.
 
